@@ -1,0 +1,91 @@
+{% extends 'zololenta/base.html' %}
+{% load static %}
+
+
+{% block description %}Страница контактной информации Золотая лента Владикавказ{% endblock %}
+
+{% block title %}Контакты{% endblock %}
+
+{% block content %}
+<div class="hero-wrap hero-bread" style="background-image: url('{% static 'images/bg_6.jpg' %}');">
+	<div class="container">
+    	<div class="row no-gutters slider-text align-items-center justify-content-center">
+        	<div class="col-md-9 ftco-animate text-center">
+            	<h1 class="mb-0 bread">Контакты</h1>
+            	<p class="breadcrumbs"><span class="mr-2"><a href="{% url 'index' %}">Домой</a></span> <span>Контакты</span></p>
+        	</div>
+        </div>
+    </div>
+</div>
+        {% if messages %}
+        <div class="alert alert-success">
+        	{% for message in messages %}
+            {{ message }}
+            {% endfor %}
+        </div>
+        {% endif %}
+<section class="ftco-section contact-section bg-light">
+	<div class="container">
+    	<div class="row block-9">
+        	<div class="col-md-6 order-md-last d-flex">
+            	<form method="post" class="bg-white p-5 contact-form">
+            		{% csrf_token %}
+            		<div class="form-group">
+                		<input type="text" class="form-control" placeholder="Имя">
+            		</div>
+            		<div class="form-group">
+                		<input type="text" class="form-control" placeholder="Email">
+            		</div>
+            		<div class="form-group">
+                		<input type="text" class="form-control" placeholder="Телефон">
+            		</div>
+            		<div class="form-group">
+                    	<select id="contact_form_contact" name="contact" class="form-control" style="width: 100%;">
+                        	<option value="">Выберите получателя (необязательно)</option>
+                                {% if main_contact %}
+                            		<option class="form-control" value="{{ main_contact.id }}">Основные контакты ({{ main_contact.name }})</option>
+                                {% endif %}
+                                {% for group in contact_groups %}
+                                    {% for contact in group.contacts.all %}
+                                    	<option class="form-control" value="{{ contact.id }}">{{ group.name }}: {{ contact.name }}</option>
+                                    {% endfor %}
+                                {% endfor %}
+                            </select>
+                        </div>
+
+            		<div class="form-group">
+                		<textarea name="" id="" cols="30" rows="7" class="form-control" placeholder="Сообщение"></textarea>
+            		</div>
+            		<div class="form-group">
+                		<input type="submit" value="Отправить сообщение" class="btn btn-primary py-3 px-5">
+            		</div>
+            	</form>
+        	</div>
+			<div class="col-md-6 d-flex">
+          		<div id="map" class="bg-white"></div>
+        	</div>
+        </div>
+    	<div class="row d-flex mt-5 contact-info">
+        	<div class="w-100"></div>
+        	<div class="col-md-3 d-flex">
+          		<div class="info bg-white p-4">
+	        		<p><span>Адрес:</span> г. Владикавказ</p>
+	        	</div>
+        	</div>
+        	<div class="col-md-3 d-flex">
+          		<div class="info bg-white p-4">
+	            	<p><span>Телефон:</span> <a href="tel://1234567920">+7 928 934 3206</a></p>
+	        	</div>
+        	</div>
+        	<div class="col-md-3 d-flex">
+          		<div class="info bg-white p-4">
+	            	<p><span>Email:</span> <a href="mailto:info@yoursite.com">zollenta@mail.ru</a></p>
+	        	</div>
+        	</div>
+
+    	</div>
+	</div>
+</section>
+		
+
+{% endblock content %}	

@@ -1,0 +1,31 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'clock3d/clock3d.css' %}">
+<div class="clock3d-wrap {% if dark %}dark{% endif %} {{ class_name }}" style="--clock-size: {{ size }}px">
+  <div class="clock3d" id="{{ wid }}">
+    <div class="face">
+      <div class="ticks"></div>
+      <div class="nums">
+        <span style="--n:12">12</span>
+        <span style="--n:1">1</span><span style="--n:2">2</span><span style="--n:3">3</span>
+        <span style="--n:4">4</span><span style="--n:5">5</span><span style="--n:6">6</span>
+        <span style="--n:7">7</span><span style="--n:8">8</span><span style="--n:9">9</span>
+        <span style="--n:10">10</span><span style="--n:11">11</span>
+      </div>
+      <div class="hand hour" id="{{ wid }}_h"></div>
+      <div class="hand min"  id="{{ wid }}_m"></div>
+      <div class="hand sec"  id="{{ wid }}_s"></div>
+      <div class="pin"></div>
+    </div>
+  </div>
+</div>
+<script defer src="{% static 'clock3d/clock3d.js' %}"></script>
+<script>
+  window.addEventListener('DOMContentLoaded', function(){
+    window.Clock3D?.mount({
+      rootId: "{{ wid }}",
+      hourId: "{{ wid }}_h",
+      minId:  "{{ wid }}_m",
+      secId:  "{{ wid }}_s"
+    });
+  });
+</script>

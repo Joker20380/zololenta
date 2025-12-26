@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+   <url>
+
+      <loc>{{ request.scheme }}://{{ request.get_host }}</loc>
+
+      <changefreq>weekly</changefreq>
+
+      <priority>1.0</priority>
+
+   </url>
+
+   <url>
+
+      <loc>{{ request.scheme }}://{{ request.get_host }}{% url 'about' %}</loc>
+
+      <changefreq>weekly</changefreq>
+
+      <priority>1.0</priority>
+
+   </url>
+   
+
+
+   {% for object in news %}
+      <url>
+
+         <loc>{{ request.scheme }}://{{ request.get_host }}{{ object.get_absolute_url }}</loc>
+
+         <lastmod>{{ object.time_create|date:'Y-m-d' }}</lastmod>
+
+         <changefreq>weekly</changefreq>
+
+         <priority>1.0</priority>
+
+      </url>
+   {% endfor %}
+
+   {% for object in programs %}
+      <url>
+
+         <loc>{{ request.scheme }}://{{ request.get_host }}{{ object.get_absolute_url }}</loc>
+
+         <lastmod>{{ object.time_create|date:'Y-m-d' }}</lastmod>
+
+         <changefreq>weekly</changefreq>
+
+         <priority>1.0</priority>
+
+      </url>
+   {% endfor %}
+   
+	{% for object in docs %}
+      <url>
+
+         <loc>{{ request.scheme }}://{{ request.get_host }}{{ object.get_absolute_url }}</loc>
+
+         <lastmod>{{ object.time_create|date:'Y-m-d' }}</lastmod>
+
+         <changefreq>weekly</changefreq>
+
+         <priority>1.0</priority>
+
+      </url>
+   {% endfor %}
+   
+   {% for object in lectures %}
+      <url>
+
+         <loc>{{ request.scheme }}://{{ request.get_host }}{{ object.get_absolute_url }}</loc>
+
+         <lastmod>{{ object.time_create|date:'Y-m-d' }}</lastmod>
+
+         <changefreq>weekly</changefreq>
+
+         <priority>1.0</priority>
+
+      </url>
+   {% endfor %}
+
+</urlset>

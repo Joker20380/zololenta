@@ -1,0 +1,58 @@
+{% extends 'diagnost/base.html' %}
+{% load static %}
+
+{% block title %}Результат диагностики{% endblock %}
+{% block description %}Детали сессии диагностики{% endblock %}
+
+{% block content %}
+<div class="top-shadow"></div>
+<div class="inner-page">
+  <div class="slider-item" style="background-image: url('{% static 'images/industrial_hero_3.jpg' %}');">
+    <div class="container">
+      <div class="row slider-text align-items-center justify-content-center">
+        <div class="col-md-8 text-center col-sm-12 element-animate pt-5">
+          <h1 class="pt-5"><span>Результат диагностики</span></h1>
+          <p class="mb-5 w-75">Анализ сессии и рекомендации</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container">
+    <div class="mb-4">
+      <h4>Общая информация</h4>
+      <p><strong>VIN:</strong> {{ session.vin }}</p>
+      <p><strong>Модель:</strong> {{ session.vehicle_model }}</p>
+      <p><strong>Дата:</strong> {{ session.created_at|date:"d.m.Y H:i" }}</p>
+    </div>
+
+    <div class="mb-4">
+      <h4>Найденные коды ошибок</h4>
+      {% if codes %}
+        <ul class="list-group">
+          {% for code in codes %}
+            <li class="list-group-item">
+              <strong>{{ code.code }}</strong> — {{ code.description|default:"Описание отсутствует" }}
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p>Нет найденных кодов ошибок.</p>
+      {% endif %}
+    </div>
+
+    <div class="mb-4">
+      <h4>Рекомендации</h4>
+      {% if session.recommendation %}
+        <pre class="bg-light p-3">{{ session.recommendation }}</pre>
+      {% else %}
+        <p>Рекомендации пока не сформированы.</p>
+      {% endif %}
+    </div>
+
+    <a href="{% url 'diagnostic_upload' %}" class="btn btn-outline-primary">Загрузить новый отчёт</a>
+  </div>
+</section>
+{% endblock %}
