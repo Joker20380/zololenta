@@ -1,3 +1,4 @@
+from __future__ import annotations
 import os
 import uuid
 from django.db import models
@@ -11,6 +12,11 @@ from model_utils import FieldTracker
 from django.utils import timezone
 from .mixins import OccupancyMixin
 from users.models import Location
+
+
+
+
+
 
 
 def image_folder(instance, filename):
@@ -251,37 +257,59 @@ class Service(models.Model):
 
 class Subscriber(models.Model):
     email = models.EmailField(unique=True, verbose_name="Email")
-    is_active = models.BooleanField(default=True)  # Активна ли подписка
-    unsubscribe_token = models.CharField(max_length=50, unique=True, blank=True, null=True)  # Токен для отписки
-    subscribed_at = models.DateTimeField(auto_now_add=True)
-    
-    class Meta:
-        verbose_name = 'Подписчика'
-        verbose_name_plural = 'Подписчики'
-        ordering = ['email']
+    is_active = models.BooleanField(default=True, verbose_name="Активна ли подписка")
+    unsubscribe_token = models.CharField(
+        max_length=50,
+        unique=True,
+        blank=True,
+        null=True,
+        verbose_name="Токен для отписки",
+    )
+    subscribed_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата подписки")
 
-    def __str__(self):
+    class Meta:
+        verbose_name = "Подписчик"
+        verbose_name_plural = "Подписчики"
+        ordering = ["email"]
+        indexes = [
+            models.Index(fields=["email"], name="idx_subscriber_email"),
+            models.Index(fields=["is_active"], name="idx_subscriber_active"),
+        ]
+
+    def __str__(self) -> str:
         return self.email
+
+    def save(self, *args, **kwargs):
+        # Единый стандарт хранения email, независимо от формы/админки/импорта
+        if self.email:
+            self.email = self.email.strip().lower()
+        super().save(*args, **kwargs)
 
 
 class ContactGroup(models.Model):
     """Группа контактов (например, Администрация, Филиал)"""
+
     name = models.CharField(max_length=100, verbose_name="Название группы")
     order = models.PositiveIntegerField(default=0, verbose_name="Порядок сортировки")
-    
+
     class Meta:
         verbose_name = "Группа контактов"
         verbose_name_plural = "Группы контактов"
-        ordering = ['order']
-    
-    def __str__(self):
+        ordering = ["order", "id"]
+
+    def __str__(self) -> str:
         return self.name
 
 
 class Contact(models.Model):
     """Конкретный контакт"""
-    group = models.ForeignKey(ContactGroup, on_delete=models.CASCADE, 
-                            verbose_name="Группа", related_name='contacts')
+
+    group = models.ForeignKey(
+        ContactGroup,
+        on_delete=models.CASCADE,
+        verbose_name="Группа",
+        related_name="contacts",
+    )
     name = models.CharField(max_length=100, verbose_name="Название")
     phone = models.CharField(max_length=20, verbose_name="Телефон", blank=True)
     email = models.EmailField(verbose_name="Email", blank=True)
@@ -289,14 +317,26 @@ class Contact(models.Model):
     description = models.TextField(verbose_name="Описание", blank=True)
     is_main = models.BooleanField(default=False, verbose_name="Основной контакт")
     order = models.PositiveIntegerField(default=0, verbose_name="Порядок сортировки")
-    location = models.ForeignKey(Location, on_delete=models.PROTECT, related_name="Contact", verbose_name="Местоположение", blank=True, null=True)
-    
+
+    location = models.ForeignKey(
+        Location,
+        on_delete=models.PROTECT,
+        related_name="contacts",
+        verbose_name="Местоположение",
+        blank=True,
+        null=True,
+    )
+
     class Meta:
         verbose_name = "Контакт"
         verbose_name_plural = "Контакты"
-        ordering = ['order']
-    
-    def __str__(self):
+        ordering = ["order", "id"]
+        indexes = [
+            models.Index(fields=["is_main"], name="idx_contact_is_main"),
+            models.Index(fields=["group", "order"], name="idx_contact_group_order"),
+        ]
+
+    def __str__(self) -> str:
         return f"{self.group}: {self.name}"
 
 
@@ -307,21 +347,27 @@ class ContactRequest(models.Model):
     message = models.TextField(verbose_name="Сообщение")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
     contact = models.ForeignKey(
-        'Contact',
+        Contact,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
-        verbose_name="Контактное лицо"
+        verbose_name="Контактное лицо",
+        related_name="requests",
     )
-    
+
     class Meta:
         verbose_name = "Запрос на контакт"
         verbose_name_plural = "Запросы на контакт"
-        ordering = ['-created_at']
-    
-    def __str__(self):
+        ordering = ["-created_at"]
+        indexes = [
+            models.Index(fields=["created_at"], name="idx_contactreq_created_at"),
+            models.Index(fields=["contact"], name="idx_contactreq_contact"),
+        ]
+
+    def __str__(self) -> str:
         contact_name = self.contact.name if self.contact else "Общий запрос"
         return f"{self.name} → {contact_name} ({self.created_at:%d.%m.%Y})"
+
         
 
 

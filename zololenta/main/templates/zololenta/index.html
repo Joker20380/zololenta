@@ -17,10 +17,10 @@
         <div class="row no-gutters slider-text js-fullheight align-items-center justify-content-center">
         	<h3 class="v">Ленты для выпускников</h3>
         	<h3 class="vr">Работаем с 2006</h3>
-          <div class="col-md-11 ftco-animate text-center">
-            <h1>Золотая лента</h1>
-            <h2><span>Именные ленты</span></h2>
-          </div>
+      <div class="col-md-11 ftco-animate text-center">
+        <h1>Золотая лента</h1>
+        <h2><span>Для выпускников школ и вузов</span></h2>
+      </div>
           <div class="mouse">
 						<a href="#" class="mouse-icon">
 							<div class="mouse-wheel"><span class="ion-ios-arrow-down"></span></div>
@@ -54,11 +54,11 @@
 		    				<div class="product">
 		    					{% if n.photo %}
 		    					<a href="{{ n.get_absolute_url }}" class="img-prod"><img class="img-fluid" src="{{ n.photo.url }}" alt="{{ n.title }}">
-		    						<span class="status">30%</span>
+		    					
 		    					</a>
 		    					{% else %}
 		    					<a href="#" class="img-prod"><img class="img-fluid" src="{% static 'images/product-1.jpg' %}" alt="no photo">
-		    						<span class="status">30%</span>
+		    				
 		    					</a>
 		    					{% endif %}
 		    					<div class="text pt-3 px-3">
@@ -102,7 +102,9 @@
 	            </div>
 	          </div>
 	          <div class="pb-md-5">
-							<p>Здесь должно быть описание того как это видео отлично вписывается в сайт и о чем оно тоже возможно описывается</p>
+							<p>Мы изготавливаем именные выпускные ленты для школ, колледжей и вузов.
+          Индивидуальный дизайн, аккуратная печать и проверенное качество —
+          именно поэтому нам доверяют уже много лет.</p>
 							<p></p>
 						</div>
 					</div>
@@ -115,7 +117,7 @@
 				<div class="row justify-content-center mb-3 pb-3">
           <div class="col-md-12 heading-section text-center ftco-animate">
           	<h1 class="big">Цвета</h1>
-            <h2 class="mb-4">Варианты цвета</h2>
+            <h2 class="mb-4">Варианты цвета ленты</h2>
           </div>
         </div>    		
     	</div>
@@ -128,11 +130,11 @@
 		    				<div class="product">
 		    					{% if n.photo %}
 		    					<a href="{{ n.get_absolute_url }}" class="img-prod"><img class="img-fluid" src="{{ n.photo.url }}" alt="{{ n.title }}">
-		    						<span class="status">30%</span>
+		    					
 		    					</a>
 		    					{% else %}
 		    					<a href="#" class="img-prod"><img class="img-fluid" src="{% static 'images/product-1.jpg' %}" alt="no photo">
-		    						<span class="status">30%</span>
+		    					
 		    					</a>
 		    					{% endif %}
 		    					<div class="text pt-3 px-3">
@@ -165,9 +167,60 @@
     	<div class="container">
     		<div class="row justify-content-center mb-3 pb-3">
           <div class="col-md-12 heading-section ftco-animate">
-          	<h2>Summer Sale</h2>
+          	<h2>Зимняя распродажа</h2>
           </div>
         </div>
+    	</div>
+    </section>
+    
+        <section class="ftco-section bg-light">
+    	<div class="container">
+				<div class="row justify-content-center mb-3 pb-3">
+          <div class="col-md-12 heading-section text-center ftco-animate">
+          	<h1 class="big">Шрифты</h1>
+            <h2 class="mb-4">Варианты шрифта</h2>
+          </div>
+        </div>    		
+    	</div>
+    	<div class="container-fluid">
+    		<div class="row">
+    			<div class="col-md-12">
+    				<div class="product-slider owl-carousel ftco-animate">
+    					{% for n in view.news_fonts %}
+    					<div class="item">
+		    				<div class="product">
+		    					{% if n.photo %}
+		    					<a href="{{ n.get_absolute_url }}" class="img-prod"><img class="img-fluid" src="{{ n.photo.url }}" alt="{{ n.title }}">
+		    					
+		    					</a>
+		    					{% else %}
+		    					<a href="#" class="img-prod"><img class="img-fluid" src="{% static 'images/product-1.jpg' %}" alt="no photo">
+		    					
+		    					</a>
+		    					{% endif %}
+		    					<div class="text pt-3 px-3">
+		    					
+		    						<div class="d-flex">
+		    							<div class="pricing">
+			    							<p class="price"><span class="mr-2 price-dc"></span><span class="price-sale"></span></p>
+			    						</div>
+			    						<div class="rating">
+			    							<p class="text-right">
+			    								<span class="ion-ios-star-outline"></span>
+			    								<span class="ion-ios-star-outline"></span>
+			    								<span class="ion-ios-star-outline"></span>
+			    								<span class="ion-ios-star-outline"></span>
+			    								<span class="ion-ios-star-outline"></span>
+			    							</p>
+			    						</div>
+		    						</div>
+		    					</div>
+		    				</div>
+	    				</div>
+	    				{% endfor %}
+    				</div>
+    			</div>
+    		</div>
     	</div>
     </section>
 
@@ -176,6 +229,7 @@
 				<div class="row justify-content-center mb-3 pb-3">
           <div class="col-md-12 heading-section text-center ftco-animate">
           	<h1 class="big">Отзывы</h1>
+          	<h2 class="mb-4">Ваши отзывы</h2>
           </div>
         </div>    		
         <div class="row justify-content-center">
@@ -266,8 +320,8 @@
       <div class="container">
         <div class="row justify-content-center mb-3 pb-3">
           <div class="col-md-12 heading-section text-center ftco-animate">
-            <h1 class="big">Blog</h1>
-            <h2>Recent Blog</h2>
+            <h1 class="big">Новости</h1>
+            <h2>Наши новости</h2>
           </div>
         </div>
         <div class="row d-flex">
@@ -326,15 +380,7 @@
 		            <div class="block-18 text-center">
 		              <div class="text">
 		                <strong class="number" data-number="10000">0</strong>
-		                <span>Happy Customers</span>
-		              </div>
-		            </div>
-		          </div>
-		          <div class="col-md-3 d-flex justify-content-center counter-wrap ftco-animate">
-		            <div class="block-18 text-center">
-		              <div class="text">
-		                <strong class="number" data-number="100">0</strong>
-		                <span>Branches</span>
+		                <span>Довольных клиентов</span>
 		              </div>
 		            </div>
 		          </div>
@@ -342,15 +388,23 @@
 		            <div class="block-18 text-center">
 		              <div class="text">
 		                <strong class="number" data-number="1000">0</strong>
-		                <span>Partner</span>
+		                <span>школ и вузов</span>
 		              </div>
 		            </div>
 		          </div>
 		          <div class="col-md-3 d-flex justify-content-center counter-wrap ftco-animate">
 		            <div class="block-18 text-center">
 		              <div class="text">
-		                <strong class="number" data-number="100">0</strong>
-		                <span>Awards</span>
+		                <strong class="number" data-number="15">0</strong>
+		                <span>лет опыта</span>
+		              </div>
+		            </div>
+		          </div>
+		          <div class="col-md-3 d-flex justify-content-center counter-wrap ftco-animate">
+		            <div class="block-18 text-center">
+		              <div class="text">
+		                <strong class="number" data-number="50000">0</strong>
+		                <span>изготовленных лент</span>
 		              </div>
 		            </div>
 		          </div>
@@ -364,8 +418,8 @@
     	<div class="container">
     		<div class="row justify-content-center mb-3 pb-3">
           <div class="col-md-12 heading-section text-center ftco-animate">
-            <h1 class="big">Services</h1>
-            <h2>We want you to express yourself</h2>
+            <h1 class="big">Услуги</h1>
+            <h2>Все для Вашего самовыражения</h2>
           </div>
         </div>
         <div class="row">
@@ -407,4 +461,4 @@
     </section>
 		
 
-{% endblock %}
+{% endblock %} на этой странице есть еще английский. замени русскими выражениями все. по смыслу это фирма которая продает именные ленты

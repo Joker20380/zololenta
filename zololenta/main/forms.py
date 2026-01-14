@@ -223,14 +223,21 @@ class PersonalAreaForm(forms.ModelForm):
         return user_profile
 
 
-
 class SubscriberForm(forms.ModelForm):
     class Meta:
         model = Subscriber
-        fields = ['email']
+        fields = ["email"]
         widgets = {
-            'email': forms.EmailInput(attrs={"placeholder": "Введите ваш email", "autocomplete": "email", "class": "form-control"})
+            "email": forms.EmailInput(attrs={
+                "placeholder": "Введите ваш email",
+                "autocomplete": "email",
+                "class": "form-control",
+            })
         }
+
+    def clean_email(self):
+        email = (self.cleaned_data.get("email") or "").strip().lower()
+        return email
 
 
 class UnsubscriberForm(forms.Form):

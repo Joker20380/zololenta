@@ -40,6 +40,11 @@ class Index(DataMixin, ListView):
 		news_colors = News.objects.filter(cat_id=3)
 		return news_colors
 		
+	@staticmethod
+	def news_fonts():
+		news_fonts = News.objects.filter(cat_id=4)
+		return news_fonts
+
 
 class ShowNews(DataMixin, DetailView):
     paginate_by = 1
