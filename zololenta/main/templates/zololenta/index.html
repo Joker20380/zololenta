@@ -1,464 +1,972 @@
 {% extends 'zololenta/base.html' %}
 {% load static %}
 
-
-{% block description %}Домашняя страница{% endblock %}
-
-{% block title %}Домой{% endblock %}
+{% block description %}Именные выпускные ленты для школ, колледжей и вузов. Выбор цвета, шрифта и персонального текста с согласованием макета перед печатью.{% endblock %}
+{% block title %}Именные выпускные ленты — Золотая лента{% endblock %}
 
 {% block content %}
 
 
 
-		
-		<div class="hero-wrap js-fullheight" style="background-image: url('{% static 'images/index_photo2.webp' %}');">
-      <div class="overlay"></div>
-      <div class="container">
-        <div class="row no-gutters slider-text js-fullheight align-items-center justify-content-center">
-        	<h3 class="v">Ленты для выпускников</h3>
-        	<h3 class="vr">Работаем с 2006</h3>
-      <div class="col-md-11 ftco-animate text-center">
-        <h1>Золотая лента</h1>
-        <h2><span>Для выпускников школ и вузов</span></h2>
-      </div>
-          <div class="mouse">
-						<a href="#" class="mouse-icon">
-							<div class="mouse-wheel"><span class="ion-ios-arrow-down"></span></div>
-						</a>
-					</div>
+<!-- HERO -->
+<section class="hero-wrap js-fullheight zl-home-hero"
+         style="background-image: url('{% static 'images/index_photo2.webp' %}');">
+
+  <div class="overlay"></div>
+  <div class="zl-home-hero-glow" aria-hidden="true"></div>
+
+  <div class="container zl-home-hero-container">
+    <div class="row no-gutters slider-text js-fullheight align-items-center">
+
+      <div class="col-lg-7 col-md-9 ftco-animate zl-home-hero-content">
+
+        <span class="zl-home-hero-eyebrow">
+          Золотая лента · с 2006 года
+        </span>
+
+        <h1 class="zl-home-hero-title">
+          Именные выпускные ленты
+          <span>для вашего класса</span>
+        </h1>
+
+        <p class="zl-home-hero-description">
+          Подберём цвет и шрифт, аккуратно разместим имена
+          и подготовим макет к согласованию перед печатью.
+        </p>
+
+        <div class="zl-home-hero-actions">
+
+          <a href="{% url 'ribbon_constructor' %}"
+             class="btn btn-primary zl-home-hero-primary">
+            Создать свою ленту
+          </a>
+
+          <a href="#section-examples"
+             class="btn zl-home-hero-secondary">
+            Посмотреть примеры
+          </a>
+
         </div>
+
+        <ul class="zl-home-hero-benefits"
+            aria-label="Преимущества">
+
+          <li>
+            <span class="icon-check"></span>
+            Макет до печати
+          </li>
+
+          <li>
+            <span class="icon-check"></span>
+            Цвет и шрифт на выбор
+          </li>
+
+          <li>
+            <span class="icon-check"></span>
+            Персональный текст
+          </li>
+
+        </ul>
+
       </div>
+
     </div>
-        {% if messages %}
-        <div class="alert alert-success">
-        	{% for message in messages %}
-            {{ message }}
-            {% endfor %}
-        </div>
-        {% endif %}
-    <div class="goto-here"></div>
-    
-    <section class="ftco-section ftco-product">
-    	<div class="container">
-    		<div class="row justify-content-center mb-3 pb-3">
-          <div class="col-md-12 heading-section text-center ftco-animate">
-          	<h1 class="big">Примеры работ</h1>
-            <h2 class="mb-4">Примеры работ</h2>
-          </div>
-        </div>
-    		<div class="row">
-    			<div class="col-md-12">
-    				<div class="product-slider owl-carousel ftco-animate">
-    					{% for n in view.news_examples %}
-    					<div class="item">
-		    				<div class="product">
-		    					{% if n.photo %}
-		    					<a href="{{ n.get_absolute_url }}" class="img-prod"><img class="img-fluid" src="{{ n.photo.url }}" alt="{{ n.title }}">
-		    					
-		    					</a>
-		    					{% else %}
-		    					<a href="#" class="img-prod"><img class="img-fluid" src="{% static 'images/product-1.jpg' %}" alt="no photo">
-		    				
-		    					</a>
-		    					{% endif %}
-		    					<div class="text pt-3 px-3">
-		    						<h3><a href="{{ n.get_absolute_url }}">{{ n.title }}</a></h3>
-		    						<div class="d-flex">
-		    							<div class="pricing">
-			    							<p class="price"><span class="mr-2 price-dc"></span><span class="price-sale"></span></p>
-			    						</div>
-			    						<div class="rating">
-			    							<p class="text-right">
-			    								<span class="ion-ios-star-outline"></span>
-			    								<span class="ion-ios-star-outline"></span>
-			    								<span class="ion-ios-star-outline"></span>
-			    								<span class="ion-ios-star-outline"></span>
-			    								<span class="ion-ios-star-outline"></span>
-			    							</p>
-			    						</div>
-		    						</div>
-		    					</div>
-		    				</div>
-	    				</div>
-	    				{% endfor %}
-    				</div>
-    			</div>
-    		</div>
-    	</div>
-    </section>
+  </div>
 
-    <section class="ftco-section ftco-no-pb ftco-no-pt bg-light">
-			<div class="container">
-				<div class="row">
-					<div class="col-md-5 p-md-5 img img-2 d-flex justify-content-center align-items-center" style="background-image: url({% static 'images/index_photo2.webp' %});">
-						<a href="https://vimeo.com/45830194" class="icon popup-vimeo d-flex justify-content-center align-items-center">
-							<span class="icon-play"></span>
-						</a>
-					</div>
-					<div class="col-md-7 py-5 wrap-about pb-md-5 ftco-animate">
-	          <div class="heading-section-bold mb-5 mt-md-5">
-	          	<div class="ml-md-0">
-		            <h2 class="mb-4">Наши ленты <br>Пользуются  <br> <span>большой популярностью</span></h2>
-	            </div>
-	          </div>
-	          <div class="pb-md-5">
-							<p>Мы изготавливаем именные выпускные ленты для школ, колледжей и вузов.
-          Индивидуальный дизайн, аккуратная печать и проверенное качество —
-          именно поэтому нам доверяют уже много лет.</p>
-							<p></p>
-						</div>
-					</div>
-				</div>
-			</div>
-		</section>
+  <a href="#section-examples"
+     class="zl-home-hero-scroll"
+     aria-label="Перейти к примерам работ">
 
-    <section class="ftco-section bg-light">
-    	<div class="container">
-				<div class="row justify-content-center mb-3 pb-3">
-          <div class="col-md-12 heading-section text-center ftco-animate">
-          	<h1 class="big">Цвета</h1>
-            <h2 class="mb-4">Варианты цвета ленты</h2>
-          </div>
-        </div>    		
-    	</div>
-    	<div class="container-fluid">
-    		<div class="row">
-    			<div class="col-md-12">
-    				<div class="product-slider owl-carousel ftco-animate">
-    					{% for n in view.news_colors %}
-    					<div class="item">
-		    				<div class="product">
-		    					{% if n.photo %}
-		    					<a href="{{ n.get_absolute_url }}" class="img-prod"><img class="img-fluid" src="{{ n.photo.url }}" alt="{{ n.title }}">
-		    					
-		    					</a>
-		    					{% else %}
-		    					<a href="#" class="img-prod"><img class="img-fluid" src="{% static 'images/product-1.jpg' %}" alt="no photo">
-		    					
-		    					</a>
-		    					{% endif %}
-		    					<div class="text pt-3 px-3">
-		    						<h3><a href="{{ n.get_absolute_url }}">{{ n.title }}</a></h3>
-		    						<div class="d-flex">
-		    							<div class="pricing">
-			    							<p class="price"><span class="mr-2 price-dc"></span><span class="price-sale"></span></p>
-			    						</div>
-			    						<div class="rating">
-			    							<p class="text-right">
-			    								<span class="ion-ios-star-outline"></span>
-			    								<span class="ion-ios-star-outline"></span>
-			    								<span class="ion-ios-star-outline"></span>
-			    								<span class="ion-ios-star-outline"></span>
-			    								<span class="ion-ios-star-outline"></span>
-			    							</p>
-			    						</div>
-		    						</div>
-		    					</div>
-		    				</div>
-	    				</div>
-	    				{% endfor %}
-    				</div>
-    			</div>
-    		</div>
-    	</div>
-    </section>
+    <span>Смотреть ниже</span>
+    <i class="ion-ios-arrow-down"></i>
 
-    <section class="ftco-section ftco-section-more img" style="background-image: url({% static 'images/bg_5.jpg' %});">
-    	<div class="container">
-    		<div class="row justify-content-center mb-3 pb-3">
-          <div class="col-md-12 heading-section ftco-animate">
-          	<h2>Зимняя распродажа</h2>
-          </div>
-        </div>
-    	</div>
-    </section>
-    
-        <section class="ftco-section bg-light">
-    	<div class="container">
-				<div class="row justify-content-center mb-3 pb-3">
-          <div class="col-md-12 heading-section text-center ftco-animate">
-          	<h1 class="big">Шрифты</h1>
-            <h2 class="mb-4">Варианты шрифта</h2>
-          </div>
-        </div>    		
-    	</div>
-    	<div class="container-fluid">
-    		<div class="row">
-    			<div class="col-md-12">
-    				<div class="product-slider owl-carousel ftco-animate">
-    					{% for n in view.news_fonts %}
-    					<div class="item">
-		    				<div class="product">
-		    					{% if n.photo %}
-		    					<a href="{{ n.get_absolute_url }}" class="img-prod"><img class="img-fluid" src="{{ n.photo.url }}" alt="{{ n.title }}">
-		    					
-		    					</a>
-		    					{% else %}
-		    					<a href="#" class="img-prod"><img class="img-fluid" src="{% static 'images/product-1.jpg' %}" alt="no photo">
-		    					
-		    					</a>
-		    					{% endif %}
-		    					<div class="text pt-3 px-3">
-		    					
-		    						<div class="d-flex">
-		    							<div class="pricing">
-			    							<p class="price"><span class="mr-2 price-dc"></span><span class="price-sale"></span></p>
-			    						</div>
-			    						<div class="rating">
-			    							<p class="text-right">
-			    								<span class="ion-ios-star-outline"></span>
-			    								<span class="ion-ios-star-outline"></span>
-			    								<span class="ion-ios-star-outline"></span>
-			    								<span class="ion-ios-star-outline"></span>
-			    								<span class="ion-ios-star-outline"></span>
-			    							</p>
-			    						</div>
-		    						</div>
-		    					</div>
-		    				</div>
-	    				</div>
-	    				{% endfor %}
-    				</div>
-    			</div>
-    		</div>
-    	</div>
-    </section>
+  </a>
 
-    <section class="ftco-section testimony-section bg-light">
-      <div class="container">
-				<div class="row justify-content-center mb-3 pb-3">
-          <div class="col-md-12 heading-section text-center ftco-animate">
-          	<h1 class="big">Отзывы</h1>
-          	<h2 class="mb-4">Ваши отзывы</h2>
-          </div>
-        </div>    		
-        <div class="row justify-content-center">
-          <div class="col-md-8 ftco-animate">
-          	<div class="row ftco-animate">
-		          <div class="col-md-12">
-		            <div class="carousel-testimony owl-carousel ftco-owl">
-		              <div class="item">
-		                <div class="testimony-wrap py-4 pb-5">
-		                  <div class="user-img mb-4" style="background-image: url({% static 'images/person_1.jpg' %})">
-		                    <span class="quote d-flex align-items-center justify-content-center">
-		                      <i class="icon-quote-left"></i>
-		                    </span>
-		                  </div>
-		                  <div class="text text-center">
-		                    <p class="mb-4">A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country, in which roasted parts of sentences fly into your mouth.</p>
-		                    <p class="name">Roger Scott</p>
-		                    <span class="position">Customer</span>
-		                  </div>
-		                </div>
-		              </div>
-		              <div class="item">
-		                <div class="testimony-wrap py-4 pb-5">
-		                  <div class="user-img mb-4" style="background-image: url({% static 'images/person_2.jpg' %})">
-		                    <span class="quote d-flex align-items-center justify-content-center">
-		                      <i class="icon-quote-left"></i>
-		                    </span>
-		                  </div>
-		                  <div class="text text-center">
-		                    <p class="mb-4">A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country, in which roasted parts of sentences fly into your mouth.</p>
-		                    <p class="name">Roger Scott</p>
-		                    <span class="position">Customer</span>
-		                  </div>
-		                </div>
-		              </div>
-		              <div class="item">
-		                <div class="testimony-wrap py-4 pb-5">
-		                  <div class="user-img mb-4" style="background-image: url({% static 'images/person_3.jpg' %})">
-		                    <span class="quote d-flex align-items-center justify-content-center">
-		                      <i class="icon-quote-left"></i>
-		                    </span>
-		                  </div>
-		                  <div class="text text-center">
-		                    <p class="mb-4">A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country, in which roasted parts of sentences fly into your mouth.</p>
-		                    <p class="name">Roger Scott</p>
-		                    <span class="position">Customer</span>
-		                  </div>
-		                </div>
-		              </div>
-		              <div class="item">
-		                <div class="testimony-wrap py-4 pb-5">
-		                  <div class="user-img mb-4" style="background-image: url({% static 'images/person_1.jpg' %})">
-		                    <span class="quote d-flex align-items-center justify-content-center">
-		                      <i class="icon-quote-left"></i>
-		                    </span>
-		                  </div>
-		                  <div class="text text-center">
-		                    <p class="mb-4">A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country, in which roasted parts of sentences fly into your mouth.</p>
-		                    <p class="name">Roger Scott</p>
-		                    <span class="position">Customer</span>
-		                  </div>
-		                </div>
-		              </div>
-		              <div class="item">
-		                <div class="testimony-wrap py-4 pb-5">
-		                  <div class="user-img mb-4" style="background-image: url({% static 'images/person_1.jpg' %})">
-		                    <span class="quote d-flex align-items-center justify-content-center">
-		                      <i class="icon-quote-left"></i>
-		                    </span>
-		                  </div>
-		                  <div class="text text-center">
-		                    <p class="mb-4">A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country, in which roasted parts of sentences fly into your mouth.</p>
-		                    <p class="name">Roger Scott</p>
-		                    <span class="position">Customer</span>
-		                  </div>
-		                </div>
-		              </div>
-		            </div>
-		          </div>
-		        </div>
-          </div>
-        </div>
+</section>
+
+<!-- MESSAGES -->
+{% if messages %}
+  <div class="container zl-home-messages">
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} zl-home-alert"
+           role="alert">
+        {{ message }}
       </div>
-    </section>
+    {% endfor %}
+  </div>
+{% endif %}
 
 
-    <section class="ftco-section">
-      <div class="container">
-        <div class="row justify-content-center mb-3 pb-3">
-          <div class="col-md-12 heading-section text-center ftco-animate">
-            <h1 class="big">Новости</h1>
-            <h2>Наши новости</h2>
-          </div>
+<!-- TRUST STRIP -->
+<section class="zl-home-trust"
+         aria-label="Преимущества компании">
+
+  <div class="container">
+    <div class="zl-home-trust-grid">
+
+      <article class="zl-home-trust-item">
+        <span class="zl-home-trust-mark" aria-hidden="true">✓</span>
+
+        <div>
+          <strong>С 2006 года</strong>
+          <span>изготавливаем выпускные ленты</span>
         </div>
-        <div class="row d-flex">
-          <div class="col-md-4 d-flex ftco-animate">
-            <div class="blog-entry align-self-stretch">
-              <a href="blog-single.html" class="block-20" style="background-image: url('{% static 'images/image_1.jpg' %}');">
-              </a>
-              <div class="text mt-3 d-block">
-                <h3 class="heading mt-3"><a href="#">Even the all-powerful Pointing has no control about the blind texts</a></h3>
-                <div class="meta mb-3">
-                  <div><a href="#">Dec 6, 2018</a></div>
-                  <div><a href="#">Admin</a></div>
-                  <div><a href="#" class="meta-chat"><span class="icon-chat"></span> 3</a></div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4 d-flex ftco-animate">
-            <div class="blog-entry align-self-stretch">
-              <a href="blog-single.html" class="block-20" style="background-image: url('{% static 'images/image_2.jpg' %}');">
-              </a>
-              <div class="text mt-3">
-                <h3 class="heading mt-3"><a href="#">Even the all-powerful Pointing has no control about the blind texts</a></h3>
-                <div class="meta mb-3">
-                  <div><a href="#">Dec 6, 2018</a></div>
-                  <div><a href="#">Admin</a></div>
-                  <div><a href="#" class="meta-chat"><span class="icon-chat"></span> 3</a></div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4 d-flex ftco-animate">
-            <div class="blog-entry align-self-stretch">
-              <a href="blog-single.html" class="block-20" style="background-image: url('{% static 'images/image_3.jpg' %}');">
-              </a>
-              <div class="text mt-3">
-                <h3 class="heading mt-3"><a href="#">Even the all-powerful Pointing has no control about the blind texts</a></h3>
-                <div class="meta mb-3">
-                  <div><a href="#">Dec 6, 2018</a></div>
-                  <div><a href="#">Admin</a></div>
-                  <div><a href="#" class="meta-chat"><span class="icon-chat"></span> 3</a></div>
-                </div>
-              </div>
-            </div>
-          </div>
+      </article>
+
+
+      <article class="zl-home-trust-item">
+        <span class="zl-home-trust-mark" aria-hidden="true">✓</span>
+
+        <div>
+          <strong>Макет до печати</strong>
+          <span>сначала согласуем оформление</span>
         </div>
+      </article>
+
+
+      <article class="zl-home-trust-item">
+        <span class="zl-home-trust-mark" aria-hidden="true">✓</span>
+
+        <div>
+          <strong>Персональный дизайн</strong>
+          <span>цвет, шрифт и текст на выбор</span>
+        </div>
+      </article>
+
+    </div>
+  </div>
+
+</section>
+
+
+<!-- EXAMPLES -->
+<section id="section-examples"
+         class="zl-home-examples">
+
+  <div class="container">
+
+    <header class="zl-home-section-header">
+
+      <div class="zl-home-section-heading">
+        <span class="zl-home-section-overline">
+          Примеры работ
+        </span>
+
+        <h2>
+          Посмотрите, как может выглядеть
+          <span>ваша выпускная лента</span>
+        </h2>
       </div>
-    </section>
 
-    <section class="ftco-section ftco-counter img" id="section-counter" style="background-image: url({% static 'images/bg_4.jpg' %});">
-    	<div class="container">
-    		<div class="row justify-content-center py-5">
-    			<div class="col-md-10">
-		    		<div class="row">
-		          <div class="col-md-3 d-flex justify-content-center counter-wrap ftco-animate">
-		            <div class="block-18 text-center">
-		              <div class="text">
-		                <strong class="number" data-number="10000">0</strong>
-		                <span>Довольных клиентов</span>
-		              </div>
-		            </div>
-		          </div>
-		          <div class="col-md-3 d-flex justify-content-center counter-wrap ftco-animate">
-		            <div class="block-18 text-center">
-		              <div class="text">
-		                <strong class="number" data-number="1000">0</strong>
-		                <span>школ и вузов</span>
-		              </div>
-		            </div>
-		          </div>
-		          <div class="col-md-3 d-flex justify-content-center counter-wrap ftco-animate">
-		            <div class="block-18 text-center">
-		              <div class="text">
-		                <strong class="number" data-number="15">0</strong>
-		                <span>лет опыта</span>
-		              </div>
-		            </div>
-		          </div>
-		          <div class="col-md-3 d-flex justify-content-center counter-wrap ftco-animate">
-		            <div class="block-18 text-center">
-		              <div class="text">
-		                <strong class="number" data-number="50000">0</strong>
-		                <span>изготовленных лент</span>
-		              </div>
-		            </div>
-		          </div>
-		        </div>
-	        </div>
-        </div>
-    	</div>
-    </section>
+      <div class="zl-home-section-intro">
+        <p>
+          Цвет основы, шрифт и надпись можно изменить.
+          Каждый вариант адаптируем под ваш класс или учебное заведение.
+        </p>
 
-    <section class="ftco-section bg-light ftco-services">
-    	<div class="container">
-    		<div class="row justify-content-center mb-3 pb-3">
-          <div class="col-md-12 heading-section text-center ftco-animate">
-            <h1 class="big">Услуги</h1>
-            <h2>Все для Вашего самовыражения</h2>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-4 text-center d-flex align-self-stretch ftco-animate">
-            <div class="media block-6 services">
-              <div class="icon d-flex justify-content-center align-items-center mb-4">
-            		<span class="flaticon-002-recommended"></span>
-              </div>
-              <div class="media-body">
-                <h3 class="heading">Refund Policy</h3>
-                <p>Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic.</p>
-              </div>
-            </div>      
-          </div>
-          <div class="col-md-4 text-center d-flex align-self-stretch ftco-animate">
-            <div class="media block-6 services">
-              <div class="icon d-flex justify-content-center align-items-center mb-4">
-            		<span class="flaticon-001-box"></span>
-              </div>
-              <div class="media-body">
-                <h3 class="heading">Premium Packaging</h3>
-                <p>Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic.</p>
-              </div>
-            </div>    
-          </div>
-          <div class="col-md-4 text-center d-flex align-self-stretch ftco-animate">
-            <div class="media block-6 services">
-              <div class="icon d-flex justify-content-center align-items-center mb-4">
-            		<span class="flaticon-003-medal"></span>
-              </div>
-              <div class="media-body">
-                <h3 class="heading">Superior Quality</h3>
-                <p>Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic.</p>
-              </div>
-            </div>      
-          </div>
-        </div>
-    	</div>
-    </section>
-		
+        <a href="{% url 'ribbon_constructor' %}"
+           class="zl-home-text-link">
+          Перейти в конструктор
+          <span aria-hidden="true">→</span>
+        </a>
+      </div>
 
-{% endblock %} на этой странице есть еще английский. замени русскими выражениями все. по смыслу это фирма которая продает именные ленты
+    </header>
+
+
+    <div class="product-slider owl-carousel zl-home-examples-slider">
+
+      {% for n in view.news_examples %}
+        <div class="item">
+
+          <article class="product zl-home-example-card">
+
+            <a href="{{ n.get_absolute_url }}"
+               class="img-prod zl-home-example-image">
+
+              {% if n.photo %}
+                <img
+                  class="img-fluid owl-lazy lazyOwl"
+                  src="{% static 'images/placeholder.webp' %}"
+                  data-src="{{ n.photo.url }}"
+                  alt="{{ n.title }}"
+                  loading="lazy"
+                  decoding="async"
+                >
+              {% else %}
+                <img
+                  class="img-fluid owl-lazy lazyOwl"
+                  src="{% static 'images/placeholder.webp' %}"
+                  data-src="{% static 'images/placeholder.webp' %}"
+                  alt="{{ n.title }}"
+                  loading="lazy"
+                  decoding="async"
+                >
+              {% endif %}
+
+            </a>
+
+            <div class="text zl-home-example-content">
+
+              <h3>
+                <a href="{{ n.get_absolute_url }}">
+                  {{ n.title }}
+                </a>
+              </h3>
+
+              <a href="{{ n.get_absolute_url }}"
+                 class="zl-home-example-link">
+                Рассмотреть вариант
+                <span aria-hidden="true">→</span>
+              </a>
+
+            </div>
+
+          </article>
+
+        </div>
+
+      {% empty %}
+
+        <div class="item">
+          <article class="product zl-home-example-card">
+
+            <div class="img-prod zl-home-example-image">
+              <img
+                class="img-fluid"
+                src="{% static 'images/placeholder.webp' %}"
+                alt="Примеры выпускных лент"
+              >
+            </div>
+
+            <div class="text zl-home-example-content">
+              <h3>Примеры скоро появятся</h3>
+            </div>
+
+          </article>
+        </div>
+
+      {% endfor %}
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ORDER PROCESS -->
+<section class="zl-home-process">
+
+  <div class="container">
+
+    <header class="zl-home-process-header">
+
+      <div>
+        <span class="zl-home-section-overline">
+          Как сделать заказ
+        </span>
+
+        <h2>
+          От идеи до готовой ленты
+          <span>без лишних согласований</span>
+        </h2>
+      </div>
+
+      <p>
+        Вы задаёте основные параметры, а мы помогаем
+        довести оформление до аккуратного готового макета.
+      </p>
+
+    </header>
+
+
+    <div class="zl-home-process-grid">
+
+      <article class="zl-home-process-card">
+        <span class="zl-home-process-number">01</span>
+        <h3>Выберите основу</h3>
+
+        <p>
+          Определите цвет ленты и подходящий вариант оформления.
+        </p>
+      </article>
+
+
+      <article class="zl-home-process-card">
+        <span class="zl-home-process-number">02</span>
+        <h3>Добавьте текст</h3>
+
+        <p>
+          Укажите имена, название класса или учебного заведения.
+        </p>
+      </article>
+
+
+      <article class="zl-home-process-card">
+        <span class="zl-home-process-number">03</span>
+        <h3>Получите макет</h3>
+
+        <p>
+          Проверим компоновку и согласуем внешний вид до печати.
+        </p>
+      </article>
+
+
+      <article class="zl-home-process-card">
+        <span class="zl-home-process-number">04</span>
+        <h3>Подтвердите заказ</h3>
+
+        <p>
+          После согласования запускаем изготовление ваших лент.
+        </p>
+      </article>
+
+    </div>
+
+
+    <div class="zl-home-process-cta">
+
+      <div>
+        <strong>Начните с собственного варианта</strong>
+
+        <span>
+          Настройте цвет, шрифт и текст прямо на сайте.
+        </span>
+      </div>
+
+      <a href="{% url 'ribbon_constructor' %}"
+         class="btn btn-primary zl-home-process-button">
+        Открыть конструктор
+      </a>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- COLORS -->
+<section class="zl-home-choice-section zl-home-colors"
+         aria-labelledby="zl-home-colors-title">
+
+  <div class="container">
+
+    <header class="zl-home-choice-header">
+
+      <div class="zl-home-choice-heading">
+        <span class="zl-home-section-overline">
+          Палитра
+        </span>
+
+        <h2 id="zl-home-colors-title">
+          Выберите цвет,
+          <span>который станет вашим</span>
+        </h2>
+      </div>
+
+      <div class="zl-home-choice-copy">
+        <p>
+          Классические, насыщенные и нежные оттенки.
+          Цвет можно сочетать со светлым, золотым
+          или контрастным текстом.
+        </p>
+
+        <a href="{% url 'ribbon_constructor' %}"
+           class="zl-home-text-link">
+          Подобрать цвет в конструкторе
+          <span aria-hidden="true">→</span>
+        </a>
+      </div>
+
+    </header>
+
+
+    <div class="product-slider owl-carousel zl-home-choice-slider">
+
+      {% for n in view.news_colors %}
+        <div class="item">
+
+          <article class="product zl-home-choice-card">
+
+            <a href="{{ n.get_absolute_url }}"
+               class="img-prod zl-home-choice-image">
+
+              {% if n.photo %}
+                <img
+                  class="img-fluid owl-lazy lazyOwl"
+                  src="{% static 'images/placeholder.webp' %}"
+                  data-src="{{ n.photo.url }}"
+                  alt="Цвет выпускной ленты: {{ n.title }}"
+                  loading="lazy"
+                  decoding="async"
+                >
+              {% else %}
+                <img
+                  class="img-fluid owl-lazy lazyOwl"
+                  src="{% static 'images/placeholder.webp' %}"
+                  data-src="{% static 'images/placeholder.webp' %}"
+                  alt="Цвет выпускной ленты: {{ n.title }}"
+                  loading="lazy"
+                  decoding="async"
+                >
+              {% endif %}
+
+            </a>
+
+            <div class="text zl-home-choice-content">
+
+              <span class="zl-home-choice-type">
+                Цвет ленты
+              </span>
+
+              <h3>
+                <a href="{{ n.get_absolute_url }}">
+                  {{ n.title }}
+                </a>
+              </h3>
+
+              <a href="{{ n.get_absolute_url }}"
+                 class="zl-home-choice-link">
+                Посмотреть
+                <span aria-hidden="true">→</span>
+              </a>
+
+            </div>
+
+          </article>
+
+        </div>
+
+      {% empty %}
+
+        <div class="item">
+          <article class="product zl-home-choice-card">
+
+            <div class="img-prod zl-home-choice-image">
+              <img
+                class="img-fluid"
+                src="{% static 'images/placeholder.webp' %}"
+                alt="Варианты цвета ленты"
+              >
+            </div>
+
+            <div class="text zl-home-choice-content">
+              <h3>Палитра скоро появится</h3>
+            </div>
+
+          </article>
+        </div>
+
+      {% endfor %}
+
+    </div>
+
+  </div>
+
+</section>
+
+<!-- FONTS -->
+<section class="zl-home-choice-section zl-home-fonts"
+         aria-labelledby="zl-home-fonts-title">
+
+  <div class="container">
+
+    <header class="zl-home-choice-header">
+
+      <div class="zl-home-choice-heading">
+        <span class="zl-home-section-overline">
+          Начертание
+        </span>
+
+        <h2 id="zl-home-fonts-title">
+          Шрифт задаёт
+          <span>характер всей ленты</span>
+        </h2>
+      </div>
+
+      <div class="zl-home-choice-copy">
+        <p>
+          Строгий, классический или рукописный вариант.
+          Поможем подобрать читаемое начертание
+          под длину имени и выбранный цвет.
+        </p>
+
+        <a href="{% url 'ribbon_constructor' %}"
+           class="zl-home-text-link">
+          Проверить свой текст
+          <span aria-hidden="true">→</span>
+        </a>
+      </div>
+
+    </header>
+
+
+    <div class="product-slider owl-carousel zl-home-choice-slider">
+
+      {% for n in view.news_fonts %}
+        <div class="item">
+
+          <article class="product zl-home-choice-card">
+
+            <a href="{{ n.get_absolute_url }}"
+               class="img-prod zl-home-choice-image">
+
+              {% if n.photo %}
+                <img
+                  class="img-fluid owl-lazy lazyOwl"
+                  src="{% static 'images/placeholder.webp' %}"
+                  data-src="{{ n.photo.url }}"
+                  alt="Шрифт для выпускной ленты: {{ n.title }}"
+                  loading="lazy"
+                  decoding="async"
+                >
+              {% else %}
+                <img
+                  class="img-fluid owl-lazy lazyOwl"
+                  src="{% static 'images/placeholder.webp' %}"
+                  data-src="{% static 'images/placeholder.webp' %}"
+                  alt="Шрифт для выпускной ленты: {{ n.title }}"
+                  loading="lazy"
+                  decoding="async"
+                >
+              {% endif %}
+
+            </a>
+
+            <div class="text zl-home-choice-content">
+
+              <span class="zl-home-choice-type">
+                Вариант шрифта
+              </span>
+
+              <h3>
+                <a href="{{ n.get_absolute_url }}">
+                  {{ n.title }}
+                </a>
+              </h3>
+
+              <a href="{{ n.get_absolute_url }}"
+                 class="zl-home-choice-link">
+                Рассмотреть
+                <span aria-hidden="true">→</span>
+              </a>
+
+            </div>
+
+          </article>
+
+        </div>
+
+      {% empty %}
+
+        <div class="item">
+          <article class="product zl-home-choice-card">
+
+            <div class="img-prod zl-home-choice-image">
+              <img
+                class="img-fluid"
+                src="{% static 'images/placeholder.webp' %}"
+                alt="Варианты шрифтов"
+              >
+            </div>
+
+            <div class="text zl-home-choice-content">
+              <h3>Шрифты скоро появятся</h3>
+            </div>
+
+          </article>
+        </div>
+
+      {% endfor %}
+
+    </div>
+
+  </div>
+
+</section>
+
+<!-- PACKAGE -->
+<section id="section-package"
+         class="zl-home-package"
+         aria-labelledby="zl-home-package-title">
+
+  <div class="container">
+
+    <header class="zl-home-package-header">
+
+      <div>
+        <span class="zl-home-section-overline">
+          Не только выпускные
+        </span>
+
+        <h2 id="zl-home-package-title">
+          Упаковочные ленты
+          <span>для подарков и событий</span>
+        </h2>
+      </div>
+
+      <p>
+        Индивидуальная печать на лентах для упаковки,
+        оформления подарков, праздников и корпоративных заказов.
+      </p>
+
+    </header>
+
+
+    <div class="product-slider owl-carousel zl-home-package-slider">
+
+      {% for n in view.news_package %}
+        <div class="item">
+
+          <article class="product zl-home-package-card">
+
+            <a href="{{ n.get_absolute_url }}"
+               class="img-prod zl-home-package-image">
+
+              {% if n.photo %}
+                <img
+                  class="img-fluid owl-lazy lazyOwl"
+                  src="{% static 'images/placeholder.webp' %}"
+                  data-src="{{ n.photo.url }}"
+                  alt="{{ n.title }}"
+                  loading="lazy"
+                  decoding="async"
+                >
+              {% else %}
+                <img
+                  class="img-fluid owl-lazy lazyOwl"
+                  src="{% static 'images/placeholder.webp' %}"
+                  data-src="{% static 'images/placeholder.webp' %}"
+                  alt="{{ n.title }}"
+                  loading="lazy"
+                  decoding="async"
+                >
+              {% endif %}
+
+            </a>
+
+            <div class="text zl-home-package-content">
+
+              <h3>
+                <a href="{{ n.get_absolute_url }}">
+                  {{ n.title }}
+                </a>
+              </h3>
+
+              <a href="{{ n.get_absolute_url }}"
+                 class="zl-home-choice-link">
+                Подробнее
+                <span aria-hidden="true">→</span>
+              </a>
+
+            </div>
+
+          </article>
+
+        </div>
+
+      {% empty %}
+
+        <div class="item">
+          <article class="product zl-home-package-card">
+
+            <div class="img-prod zl-home-package-image">
+              <img
+                class="img-fluid"
+                src="{% static 'images/placeholder.webp' %}"
+                alt="Упаковочные ленты"
+              >
+            </div>
+
+            <div class="text zl-home-package-content">
+              <h3>Примеры скоро появятся</h3>
+            </div>
+
+          </article>
+        </div>
+
+      {% endfor %}
+
+    </div>
+
+
+    <div class="zl-home-final-cta">
+
+      <div class="zl-home-final-cta-copy">
+        <span class="zl-home-section-overline">
+          Ваша лента начинается здесь
+        </span>
+
+        <h2>
+          Создайте первый вариант
+          <span>прямо сейчас</span>
+        </h2>
+
+        <p>
+          Выберите цвет, шрифт и текст.
+          После заявки мы проверим макет и свяжемся с вами.
+        </p>
+      </div>
+
+      <div class="zl-home-final-cta-actions">
+
+        <a href="{% url 'ribbon_constructor' %}"
+           class="btn btn-primary zl-home-final-primary">
+          Открыть конструктор
+        </a>
+
+        <a href="{% url 'contacts' %}"
+           class="btn zl-home-final-secondary">
+          Задать вопрос
+        </a>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+<!-- HOME TAIL START -->
+
+<!-- STORIES -->
+<section class="zl-home-stories"
+         aria-labelledby="zl-home-stories-title">
+
+  <div class="container">
+
+    <header class="zl-home-stories-header">
+
+      <div>
+        <span class="zl-home-section-overline">
+          Полезные материалы
+        </span>
+
+        <h2 id="zl-home-stories-title">
+          Всё, что поможет
+          <span>подготовить заказ</span>
+        </h2>
+      </div>
+
+      <div class="zl-home-stories-intro">
+        <p>
+          Рассказываем, как выбрать цвет, текст и оформление,
+          а также объясняем порядок заказа выпускных лент.
+        </p>
+
+        <a href="{% url 'blog' %}"
+           class="zl-home-text-link">
+          Все публикации
+          <span aria-hidden="true">→</span>
+        </a>
+      </div>
+
+    </header>
+
+
+    <div class="zl-home-stories-grid">
+
+      {% for n in view.news_blog %}
+        <article class="zl-home-story-card">
+
+          <a href="{{ n.get_absolute_url }}"
+             class="zl-home-story-cover"
+             aria-label="{{ n.title }}">
+
+            {% if n.photo %}
+              <img
+                src="{{ n.photo.url }}"
+                alt="{{ n.title }}"
+                loading="lazy"
+                decoding="async"
+              >
+            {% else %}
+              <span class="zl-home-story-placeholder-label">
+                Золотая лента
+              </span>
+
+              <strong class="zl-home-story-placeholder-number">
+                0{{ forloop.counter }}
+              </strong>
+            {% endif %}
+
+          </a>
+
+
+          <div class="zl-home-story-content">
+
+            <div class="zl-home-story-meta">
+
+              <span>
+                {{ n.cat.name|default:"Полезное" }}
+              </span>
+
+              <time datetime="{{ n.time_create|date:'c' }}">
+                {{ n.time_create|date:"d.m.Y" }}
+              </time>
+
+            </div>
+
+
+            <h3>
+              <a href="{{ n.get_absolute_url }}">
+                {{ n.title }}
+              </a>
+            </h3>
+
+
+            {% if n.content %}
+              <p>
+                {{ n.content|striptags|truncatewords:22 }}
+              </p>
+            {% endif %}
+
+
+            <a href="{{ n.get_absolute_url }}"
+               class="zl-home-story-link">
+              Читать материал
+              <span aria-hidden="true">→</span>
+            </a>
+
+          </div>
+
+        </article>
+
+      {% empty %}
+
+        <article class="zl-home-story-card zl-home-story-card-empty">
+
+          <div class="zl-home-story-cover">
+            <span class="zl-home-story-placeholder-label">
+              Золотая лента
+            </span>
+          </div>
+
+          <div class="zl-home-story-content">
+            <h3>Полезные материалы скоро появятся</h3>
+
+            <p>
+              Мы готовим рекомендации по выбору и заказу лент.
+            </p>
+          </div>
+
+        </article>
+
+      {% endfor %}
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- FAQ -->
+<section class="zl-home-faq"
+         aria-labelledby="zl-home-faq-title">
+
+  <div class="container">
+
+    <div class="zl-home-faq-layout">
+
+      <div class="zl-home-faq-intro">
+
+        <span class="zl-home-section-overline">
+          Вопросы и ответы
+        </span>
+
+        <h2 id="zl-home-faq-title">
+          Перед заказом
+          <span>важно всё уточнить</span>
+        </h2>
+
+        <p>
+          Здесь собраны основные вопросы.
+          Для индивидуальной консультации напишите нам напрямую.
+        </p>
+
+        <a href="{% url 'contacts' %}"
+           class="btn btn-primary zl-home-faq-button">
+          Связаться с нами
+        </a>
+
+      </div>
+
+
+      <div class="zl-home-faq-list">
+
+        <details class="zl-home-faq-item" open>
+          <summary>
+            Можно ли увидеть макет до изготовления?
+            <span aria-hidden="true"></span>
+          </summary>
+
+          <div>
+            <p>
+              Да. Перед печатью мы проверяем компоновку текста
+              и согласуем с вами итоговый вариант оформления.
+            </p>
+          </div>
+        </details>
+
+
+        <details class="zl-home-faq-item">
+          <summary>
+            Можно ли сделать разные имена для одного класса?
+            <span aria-hidden="true"></span>
+          </summary>
+
+          <div>
+            <p>
+              Да. Для группового заказа можно подготовить
+              персональный текст для каждого выпускника.
+            </p>
+          </div>
+        </details>
+
+
+        <details class="zl-home-faq-item">
+          <summary>
+            Можно ли выбрать собственный цвет и шрифт?
+            <span aria-hidden="true"></span>
+          </summary>
+
+          <div>
+            <p>
+              В конструкторе доступны варианты цвета, шрифта
+              и текста. После заявки мы проверим,
+              насколько выбранное сочетание хорошо читается.
+            </p>
+          </div>
+        </details>
+
+
+        <details class="zl-home-faq-item">
+          <summary>
+            Что делать, если я не определился с оформлением?
+            <span aria-hidden="true"></span>
+          </summary>
+
+          <div>
+            <p>
+              Оставьте заявку с базовыми пожеланиями.
+              Мы поможем подобрать подходящее сочетание
+              цвета, шрифта и текста.
+            </p>
+          </div>
+        </details>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+<!-- HOME TAIL END -->
+
+{% endblock %}

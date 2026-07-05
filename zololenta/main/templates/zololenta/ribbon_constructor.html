@@ -1,0 +1,917 @@
+{% extends 'zololenta/base.html' %}
+{% load static %}
+
+{% block description %}Конструктор именной выпускной ленты: выбор цвета и шрифта из каталога сайта, групповой заказ и заявка{% endblock %}
+{% block title %}Конструктор ленты{% endblock %}
+
+{% block content %}
+
+<!-- CONSTRUCTOR HERO -->
+<section class="zl-constructor-hero">
+
+  <div class="zl-constructor-hero-decoration"
+       aria-hidden="true"></div>
+
+  <div class="container">
+
+    <div class="zl-constructor-hero-content">
+
+      <nav class="zl-constructor-breadcrumbs"
+           aria-label="Навигационная цепочка">
+
+        <a href="{% url 'index' %}">
+          Главная
+        </a>
+
+        <span aria-hidden="true">/</span>
+
+        <span>Конструктор</span>
+
+      </nav>
+
+      <span class="zl-constructor-overline">
+        Персональный макет
+      </span>
+
+      <h1>
+        Создайте свою
+        <span>выпускную ленту</span>
+      </h1>
+
+      <p>
+        Выберите цвет ленты, оттенок печати и шрифт.
+        Предварительный вариант будет обновляться
+        прямо на странице.
+      </p>
+
+      <div class="zl-constructor-hero-benefits">
+
+        <span>
+          <strong>01</strong>
+          Живое превью
+        </span>
+
+        <span>
+          <strong>02</strong>
+          Каталог цветов
+        </span>
+
+        <span>
+          <strong>03</strong>
+          Согласование до печати
+        </span>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+<!-- MESSAGES -->
+{% if messages %}
+<section class="ftco-section pt-3 pb-0">
+  <div class="container">
+    {% for message in messages %}
+      <div class="alert alert-success mb-2">{{ message }}</div>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+<section class="ftco-section zl-constructor-main">
+  <div class="container">
+    <div class="row justify-content-center">
+      <!-- центр как в checkout -->
+      <div class="col-xl-12 ftco-animate zl-constructor-shell">
+
+        <div class="row">
+
+          <!-- LEFT: FORM -->
+          <div class="col-lg-7 zl-constructor-form-column">
+            <form method="post" novalidate class="billing-form zl-constructor-form" id="ribbonOrderForm">
+              {% csrf_token %}
+
+              <div class="zl-constructor-step-heading">
+                <span>Шаг 01</span>
+                <div>
+                  <h2>Текст на ленте</h2>
+                  <p>
+                    Укажите основную надпись. Её можно будет
+                    дополнительно уточнить при согласовании макета.
+                  </p>
+                </div>
+              </div>
+
+              {% if form.non_field_errors %}
+                <div class="zl-constructor-form-alert">
+                  {{ form.non_field_errors }}
+                </div>
+              {% endif %}
+
+              <!-- TEXT -->
+              <div class="form-group">
+                <label>Текст на ленте</label>
+                {{ form.text }}
+                {% if form.text.errors %}<div class="text-danger mt-1">{{ form.text.errors }}</div>{% endif %}
+                <small class="text-muted">Например: Выпускник 2026 · Класс 11-А · ГБОУ №1</small>
+              </div>
+
+              <!-- HIDDEN (мы управляем ими через клики по карточкам) -->
+              {{ form.ribbon_bg }}
+              {{ form.text_color }}
+              {{ form.font_family }}
+
+              <div class="zl-constructor-step-heading zl-constructor-step-heading-spaced">
+                <span>Шаг 02</span>
+                <div>
+                  <h2>Цвет и печать</h2>
+                  <p>
+                    Выберите основу ленты и оттенок текста.
+                    Результат сразу появится в макете справа.
+                  </p>
+                </div>
+              </div>
+
+              <!-- COLORS (Bootstrap scroll strip) -->
+              <div class="form-group mt-4">
+                <div class="d-flex align-items-end justify-content-between">
+                  <label class="mb-0">Цвет ленты (каталог)</label>
+                  <small class="text-muted">листай и выбирай</small>
+                </div>
+
+                <div class="ribbon-strip-wrap position-relative mt-2">
+                  <button type="button" class="ribbon-nav ribbon-nav--prev" data-scroll-target="#ribbonColorStrip" aria-label="Назад">‹</button>
+
+                  <div class="ribbon-strip" id="ribbonColorStrip" tabindex="0" aria-label="Каталог цветов ленты">
+                    {% for opt in ribbon_colors %}
+                      <div class="ribbon-strip__item">
+                        <button type="button"
+                                class="opt-card2 js-color"
+                                data-color="{{ opt.css_value }}"
+                                data-label="{{ opt.news.title }}"
+                                aria-label="Цвет: {{ opt.news.title }}">
+                          <div class="opt2-media">
+                            {% if opt.news.photo %}
+                              <img class="opt2-img"
+                                   src="{{ opt.news.photo.url }}"
+                                   alt="{{ opt.news.title }}"
+                                   loading="lazy" decoding="async">
+                            {% else %}
+                              <div class="opt2-img opt2-img--placeholder" aria-hidden="true"></div>
+                            {% endif %}
+
+                            <span class="opt2-badge">
+                              <span class="opt2-swatch" style="background: {{ opt.css_value }};"></span>
+                              <span class="opt2-badge-text">{{ opt.news.title }}</span>
+                            </span>
+
+                            <span class="opt2-check" aria-hidden="true">✓</span>
+                          </div>
+
+                          <div class="opt2-body">
+                            <div class="opt2-title">{{ opt.news.title }}</div>
+                            <div class="opt2-sub text-muted">Цвет ленты</div>
+                          </div>
+                        </button>
+                      </div>
+                    {% empty %}
+                      <div class="ribbon-strip__item">
+                        <div class="text-muted p-3">Нет цветов (cat_id=3).</div>
+                      </div>
+                    {% endfor %}
+                  </div>
+
+                  <button type="button" class="ribbon-nav ribbon-nav--next" data-scroll-target="#ribbonColorStrip" aria-label="Вперёд">›</button>
+                </div>
+
+                {% if form.ribbon_bg.errors %}<div class="text-danger mt-1">{{ form.ribbon_bg.errors }}</div>{% endif %}
+              </div>
+
+              <!-- TEXT COLOR (простая сетка) -->
+              <div class="form-group mt-4">
+                <div class="d-flex align-items-end justify-content-between">
+                  <label class="mb-0">Цвет текста</label>
+                  <small class="text-muted">быстрый выбор</small>
+                </div>
+
+                <div class="opt-grid opt-grid--mini mt-2" id="textColorGrid">
+                  <button type="button" class="opt-mini js-textcolor" data-color="#FFFFFF" data-label="Белый" aria-label="Белый текст">
+                    <span class="mini-swatch" style="background:#FFFFFF;border:1px solid rgba(0,0,0,.15)"></span>
+                    <span class="mini-title">Белый</span>
+                    <span class="mini-check" aria-hidden="true">✓</span>
+                  </button>
+
+                  <button type="button" class="opt-mini js-textcolor" data-color="#111827" data-label="Чёрный" aria-label="Чёрный текст">
+                    <span class="mini-swatch" style="background:#111827"></span>
+                    <span class="mini-title">Чёрный</span>
+                    <span class="mini-check" aria-hidden="true">✓</span>
+                  </button>
+
+                  <button type="button" class="opt-mini js-textcolor" data-color="#FFD36A" data-label="Золото" aria-label="Золотой текст">
+                    <span class="mini-swatch" style="background:#FFD36A"></span>
+                    <span class="mini-title">Золото</span>
+                    <span class="mini-check" aria-hidden="true">✓</span>
+                  </button>
+
+                  <button type="button" class="opt-mini js-textcolor" data-color="#D1D5DB" data-label="Серебро" aria-label="Серебро текст">
+                    <span class="mini-swatch" style="background:#D1D5DB"></span>
+                    <span class="mini-title">Серебро</span>
+                    <span class="mini-check" aria-hidden="true">✓</span>
+                  </button>
+                </div>
+
+                {% if form.text_color.errors %}<div class="text-danger mt-1">{{ form.text_color.errors }}</div>{% endif %}
+              </div>
+
+              <div class="zl-constructor-step-heading zl-constructor-step-heading-spaced">
+                <span>Шаг 03</span>
+                <div>
+                  <h2>Шрифт</h2>
+                  <p>
+                    Сравните варианты на вашем тексте
+                    и выберите подходящее начертание.
+                  </p>
+                </div>
+              </div>
+
+              <!-- FONTS (Bootstrap scroll strip) -->
+              <div class="form-group mt-4">
+                <div class="d-flex align-items-end justify-content-between">
+                  <label class="mb-0">Шрифт (каталог)</label>
+                  <small class="text-muted">листай и выбирай</small>
+                </div>
+
+                <div class="ribbon-strip-wrap position-relative mt-2">
+                  <button type="button" class="ribbon-nav ribbon-nav--prev" data-scroll-target="#ribbonFontStrip" aria-label="Назад">‹</button>
+
+                  <div class="ribbon-strip" id="ribbonFontStrip" tabindex="0" aria-label="Каталог шрифтов">
+                    {% for opt in ribbon_fonts %}
+                      <div class="ribbon-strip__item">
+                        <button type="button"
+                                class="opt-card2 js-font"
+                                data-font="{{ opt.css_value }}"
+                                data-font-url="{{ opt.font_url }}"
+                                data-label="{{ opt.news.title }}"
+                                aria-label="Шрифт: {{ opt.news.title }}">
+                          <div class="opt2-media">
+                            {% if opt.news.photo %}
+                              <img class="opt2-img"
+                                   src="{{ opt.news.photo.url }}"
+                                   alt="{{ opt.news.title }}"
+                                   loading="lazy" decoding="async">
+                            {% else %}
+                              <div class="opt2-img opt2-img--placeholder" aria-hidden="true"></div>
+                            {% endif %}
+                            <span class="opt2-check" aria-hidden="true">✓</span>
+                          </div>
+
+                          <div class="opt2-body">
+                            <div class="opt2-title">{{ opt.news.title }}</div>
+                            <div class="opt2-sample js-font-sample"
+                                 style="font-family: {{ opt.css_value }};">
+                              Выпускник 2026
+                            </div>
+                          </div>
+                        </button>
+                      </div>
+                    {% empty %}
+                      <div class="ribbon-strip__item">
+                        <div class="text-muted p-3">Нет шрифтов (cat_id=4).</div>
+                      </div>
+                    {% endfor %}
+                  </div>
+
+                  <button type="button" class="ribbon-nav ribbon-nav--next" data-scroll-target="#ribbonFontStrip" aria-label="Вперёд">›</button>
+                </div>
+
+                {% if form.font_family.errors %}<div class="text-danger mt-1">{{ form.font_family.errors }}</div>{% endif %}
+              </div>
+
+              <div class="zl-constructor-step-heading zl-constructor-step-heading-spaced">
+                <span>Шаг 04</span>
+                <div>
+                  <h2>Количество</h2>
+                  <p>
+                    Для группового заказа добавьте список:
+                    одна строка — одна персональная лента.
+                  </p>
+                </div>
+              </div>
+
+              <!-- GROUP -->
+              <div class="form-group mt-4">
+                <div class="checkbox">
+                  <label>
+                    {{ form.is_group_order }}
+                    Групповой заказ
+                  </label>
+                </div>
+              </div>
+
+              <div id="groupBlock" style="display:none;">
+                <div class="row align-items-end">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label>Количество человек</label>
+                      {{ form.persons_count }}
+                      {% if form.persons_count.errors %}<div class="text-danger mt-1">{{ form.persons_count.errors }}</div>{% endif %}
+                    </div>
+                  </div>
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <label>Список ФИО</label>
+                      {{ form.persons_list }}
+                      {% if form.persons_list.errors %}<div class="text-danger mt-1">{{ form.persons_list.errors }}</div>{% endif %}
+                      <small class="text-muted">
+                        Одна строка = одна лента.
+                        Количество будет рассчитано автоматически.
+                      </small>
+
+                      <div class="zl-constructor-count-status"
+                           id="personsCountStatus"
+                           aria-live="polite">
+
+                        <span>
+                          Имен в списке:
+                          <strong id="personsLineCount">0</strong>
+                        </span>
+
+                        <span id="personsCountMessage">
+                          Добавьте список ФИО
+                        </span>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- COMMENT -->
+              <div class="form-group">
+                <label>Комментарий</label>
+                {{ form.comment }}
+                {% if form.comment.errors %}<div class="text-danger mt-1">{{ form.comment.errors }}</div>{% endif %}
+              </div>
+
+              <hr>
+
+              <div class="zl-constructor-step-heading zl-constructor-step-heading-spaced">
+                <span>Шаг 05</span>
+                <div>
+                  <h2>Контактные данные</h2>
+                  <p>
+                    Укажите телефон или email.
+                    Менеджер свяжется с вами для согласования макета.
+                  </p>
+                </div>
+              </div>
+
+              <div class="row align-items-end">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label>Имя</label>
+                    {{ form.name }}
+                    {% if form.name.errors %}<div class="text-danger mt-1">{{ form.name.errors }}</div>{% endif %}
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label>Телефон</label>
+                    {{ form.phone }}
+                    {% if form.phone.errors %}<div class="text-danger mt-1">{{ form.phone.errors }}</div>{% endif %}
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label>Email</label>
+                    {{ form.email }}
+                    {% if form.email.errors %}<div class="text-danger mt-1">{{ form.email.errors }}</div>{% endif %}
+                  </div>
+                </div>
+              </div>
+
+              <p class="mt-4 mb-0">
+                <button class="btn btn-primary py-3 px-4"
+                        type="submit"
+                        id="ribbonSubmitButton">
+
+                  <span data-submit-text>
+                    Отправить заявку
+                  </span>
+
+                  <span class="zl-submit-spinner"
+                        aria-hidden="true"></span>
+
+                </button>
+              </p>
+
+            </form>
+          </div>
+
+          <!-- RIGHT: PREVIEW -->
+          <div class="col-lg-5 mt-5 mt-lg-0 zl-constructor-preview-column">
+            <div class="cart-detail cart-total zl-constructor-preview-card">
+              <div class="zl-constructor-preview-heading">
+                <span>Предварительный макет</span>
+                <h3 class="billing-heading mb-0">Ваша лента</h3>
+              </div>
+
+              <div class="ribbon-preview" id="ribbonPreview">
+                <div class="ribbon-edge ribbon-edge--left"></div>
+                <div class="ribbon-edge ribbon-edge--right"></div>
+                <div class="ribbon-sheen"></div>
+                <div class="ribbon-texture"></div>
+                <div class="ribbon-text" id="ribbonText">Выпускник 2026</div>
+              </div>
+
+              <hr>
+
+              <div class="small text-muted">
+                <div class="d-flex justify-content-between">
+                  <span>Цвет ленты</span>
+                  <span id="metaRibbonColor">—</span>
+                </div>
+                <div class="d-flex justify-content-between">
+                  <span>Цвет текста</span>
+                  <span id="metaTextColor">—</span>
+                </div>
+                <div class="d-flex justify-content-between">
+                  <span>Шрифт</span>
+                  <span id="metaFont">—</span>
+                </div>
+              </div>
+
+              <p class="zl-constructor-preview-note">
+                Это предварительное изображение.
+                Финальное расположение надписей согласуем перед печатью.
+              </p>
+            </div>
+
+            <div class="cart-detail zl-constructor-help-card mt-4">
+              <h3 class="billing-heading mb-4">Подсказка</h3>
+              <p class="mb-2">Текст → цвет ленты → цвет текста → шрифт → отправить заявку.</p>
+              <p class="mb-0 text-muted">Финальный макет согласуем перед печатью.</p>
+            </div>
+
+          </div>
+
+        </div><!-- /row -->
+      </div><!-- /col -->
+    </div><!-- /justify -->
+  </div><!-- /container -->
+</section>
+
+<style>
+/* базовая аккуратность */
+.billing-form .form-control,
+.billing-form select,
+.billing-form textarea{ border-radius: 6px; }
+
+/* ===== карточки (как было) ===== */
+.opt-card2{
+  width:260px;
+  padding:0;
+  border-radius:14px;
+  border:1px solid rgba(0,0,0,.10);
+  background:#fff;
+  overflow:hidden;
+  cursor:pointer;
+  transition:transform .12s ease, box-shadow .12s ease, border-color .12s ease;
+  text-align:left;
+}
+@media (max-width: 575.98px){
+  .opt-card2{ width:72vw; max-width:340px; }
+}
+.opt-card2:hover{ transform:translateY(-1px); box-shadow:0 12px 26px rgba(0,0,0,.10); }
+.opt-card2.is-active{ border-color:#111827; box-shadow:0 14px 30px rgba(0,0,0,.16); }
+
+.opt2-media{ position:relative; height:92px; background:#f3f4f6; }
+.opt2-img{ width:100%; height:100%; object-fit:cover; display:block; }
+.opt2-img--placeholder{
+  background:
+    linear-gradient(135deg, rgba(17,24,39,.06), rgba(17,24,39,.02)),
+    repeating-linear-gradient(135deg, rgba(255,255,255,.25) 0px, rgba(255,255,255,.25) 8px, rgba(0,0,0,.03) 8px, rgba(0,0,0,.03) 16px);
+}
+.opt2-body{ padding:10px 10px 12px; }
+.opt2-title{ font-weight:700; font-size:13px; line-height:1.15; color:#111827; }
+.opt2-sub{ font-size:12px; margin-top:4px; }
+.opt2-sample{ margin-top:6px; font-weight:800; font-size:14px; line-height:1.1; color:#111827; }
+
+.opt2-badge{
+  position:absolute; left:10px; bottom:10px;
+  display:inline-flex; gap:8px; align-items:center;
+  background:rgba(255,255,255,.92);
+  border:1px solid rgba(0,0,0,.10);
+  border-radius:999px;
+  padding:5px 10px;
+  backdrop-filter: blur(6px);
+}
+.opt2-swatch{
+  width:14px; height:14px; border-radius:6px;
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,.10);
+}
+.opt2-badge-text{ font-size:12px; font-weight:700; color:#111827; }
+
+.opt2-check{
+  position:absolute; right:10px; top:10px;
+  width:24px; height:24px;
+  border-radius:999px;
+  background:rgba(17,24,39,.92);
+  color:#fff;
+  display:flex; align-items:center; justify-content:center;
+  font-weight:900;
+  opacity:0;
+  transform:scale(.92);
+  transition:opacity .12s ease, transform .12s ease;
+}
+.opt-card2.is-active .opt2-check{ opacity:1; transform:scale(1); }
+
+/* mini text color (как было) */
+.opt-grid{ display:grid; gap:10px; }
+.opt-grid--mini{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (min-width: 576px){ .opt-grid--mini{ grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+
+.opt-mini{
+  width:100%;
+  border-radius:12px;
+  border:1px solid rgba(0,0,0,.10);
+  background:#fff;
+  padding:10px 10px;
+  display:flex; align-items:center; gap:10px;
+  cursor:pointer;
+  transition:transform .12s ease, box-shadow .12s ease, border-color .12s ease;
+  text-align:left;
+  position:relative;
+}
+.opt-mini:hover{ transform:translateY(-1px); box-shadow:0 10px 22px rgba(0,0,0,.08); }
+.opt-mini.is-active{ border-color:#111827; box-shadow:0 12px 24px rgba(0,0,0,.14); }
+.mini-swatch{ width:20px; height:20px; border-radius:8px; flex:0 0 20px; }
+.mini-title{ font-weight:700; font-size:13px; color:#111827; }
+.mini-check{
+  margin-left:auto;
+  width:22px; height:22px;
+  border-radius:999px;
+  background:rgba(17,24,39,.92);
+  color:#fff;
+  display:flex; align-items:center; justify-content:center;
+  font-weight:900;
+  opacity:0;
+  transform:scale(.92);
+  transition:opacity .12s ease, transform .12s ease;
+}
+.opt-mini.is-active .mini-check{ opacity:1; transform:scale(1); }
+
+/* preview (как было) */
+.ribbon-preview{
+  --ribbon-bg:#1E4ED8;
+  height:170px;border-radius:12px;position:relative;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--ribbon-bg);
+  box-shadow:0 14px 35px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.25);
+  border:1px solid rgba(255,255,255,.18);
+}
+.ribbon-preview::before{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(255,255,255,.18),rgba(255,255,255,.04) 35%,rgba(0,0,0,.10));
+  mix-blend-mode:overlay;
+}
+.ribbon-sheen{
+  position:absolute;inset:-40% -20%;
+  background:radial-gradient(circle at 30% 40%,rgba(255,255,255,.35),transparent 55%);
+  transform:rotate(-12deg);
+}
+.ribbon-texture{
+  position:absolute;inset:0;
+  background:repeating-linear-gradient(135deg,rgba(255,255,255,.08) 0px,rgba(255,255,255,.08) 2px,rgba(0,0,0,.02) 2px,rgba(0,0,0,.02) 6px);
+  opacity:.2;
+}
+.ribbon-edge{
+  position:absolute;top:0;width:42px;height:100%;
+  background:linear-gradient(180deg,rgba(0,0,0,.18),rgba(0,0,0,.06) 40%,rgba(255,255,255,.10));
+  opacity:.35;
+}
+.ribbon-edge--left{left:0;}
+.ribbon-edge--right{right:0;transform:scaleX(-1);}
+
+.ribbon-text{
+  position:relative;z-index:2;padding:0 16px;text-align:center;
+  font-size:30px;font-weight:800;line-height:1.08;
+  color:#fff;text-shadow:0 2px 10px rgba(0,0,0,.35);
+}
+@media (max-width: 575px){
+  .ribbon-text{font-size:26px;}
+}
+
+/* ===== Bootstrap-like strip (no Owl) ===== */
+.ribbon-strip-wrap{ position:relative; }
+
+.ribbon-strip{
+  display:flex;
+  gap:12px;
+  overflow-x:auto;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x mandatory;
+  padding: 4px 44px 10px; /* место под стрелки */
+}
+.ribbon-strip__item{
+  flex:0 0 auto;
+  scroll-snap-align:start;
+}
+
+/* nice scrollbar */
+.ribbon-strip::-webkit-scrollbar{ height:8px; }
+.ribbon-strip::-webkit-scrollbar-thumb{ background:rgba(0,0,0,.12); border-radius:999px; }
+.ribbon-strip::-webkit-scrollbar-track{ background:transparent; }
+
+/* arrows */
+.ribbon-nav{
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+  width:36px;height:36px;
+  border-radius:999px;
+  border:1px solid rgba(0,0,0,.12);
+  background:rgba(255,255,255,.92);
+  backdrop-filter:blur(6px);
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;line-height:1;
+  z-index:2;
+  cursor:pointer;
+  box-shadow:0 10px 22px rgba(0,0,0,.08);
+}
+.ribbon-nav--prev{ left:6px; }
+.ribbon-nav--next{ right:6px; }
+</style>
+
+<script>
+(function(){
+  const textInput = document.querySelector('[name="text"]');
+  const orderForm = document.getElementById('ribbonOrderForm');
+  const submitButton = document.getElementById('ribbonSubmitButton');
+
+  const preview = document.getElementById('ribbonPreview');
+  const ribbonText = document.getElementById('ribbonText');
+
+  const isGroup = document.querySelector('[name="is_group_order"]');
+  const groupBlock = document.getElementById('groupBlock');
+  const personsCountInput = document.querySelector('[name="persons_count"]');
+  const personsListInput = document.querySelector('[name="persons_list"]');
+  const personsLineCount = document.getElementById('personsLineCount');
+  const personsCountMessage = document.getElementById('personsCountMessage');
+  const personsCountStatus = document.getElementById('personsCountStatus');
+
+  const ribbonBgInput = document.querySelector('[name="ribbon_bg"]');
+  const textColorInput = document.querySelector('[name="text_color"]');
+  const fontFamilyInput = document.querySelector('[name="font_family"]');
+
+  const metaRibbonColor = document.getElementById('metaRibbonColor');
+  const metaTextColor = document.getElementById('metaTextColor');
+  const metaFont = document.getElementById('metaFont');
+
+  const debugEl = document.getElementById('ribbonDebug');
+  function logLine(msg){
+    if (!debugEl) return;
+    debugEl.textContent += msg + "\n";
+  }
+
+  function ensureFontLink(url){
+    if(!url) return;
+    const key = 'font:' + url;
+    if (document.querySelector('link[data-font-key="'+key+'"]')) return;
+    const l = document.createElement('link');
+    l.rel = 'stylesheet';
+    l.href = url;
+    l.setAttribute('data-font-key', key);
+    document.head.appendChild(l);
+  }
+
+  function setActive(nodeList, activeBtn){
+    nodeList.forEach(b => b.classList.toggle('is-active', b === activeBtn));
+  }
+
+  function update(){
+    const visibleText = (
+      textInput && textInput.value.trim()
+    ) ? textInput.value.trim() : 'Выпускник 2026';
+
+    ribbonText.textContent = visibleText;
+
+    const bg = (
+      ribbonBgInput && ribbonBgInput.value
+    ) ? ribbonBgInput.value : '#1E4ED8';
+
+    const tc = (
+      textColorInput && textColorInput.value
+    ) ? textColorInput.value : '#FFFFFF';
+
+    const ff = (
+      fontFamilyInput && fontFamilyInput.value
+    ) ? fontFamilyInput.value : "'Montserrat', sans-serif";
+
+    preview.style.setProperty('--ribbon-bg', bg);
+    ribbonText.style.color = tc;
+    ribbonText.style.fontFamily = ff;
+
+    document.querySelectorAll('.js-font-sample').forEach((sample) => {
+      sample.textContent = visibleText;
+    });
+
+    const activeColor = document.querySelector('.js-color.is-active');
+    const activeTextColor = document.querySelector('.js-textcolor.is-active');
+    const activeFont = document.querySelector('.js-font.is-active');
+
+    if (metaRibbonColor) {
+      metaRibbonColor.textContent = (
+        activeColor && activeColor.dataset.label
+      ) ? activeColor.dataset.label : bg;
+    }
+
+    if (metaTextColor) {
+      metaTextColor.textContent = (
+        activeTextColor && activeTextColor.dataset.label
+      ) ? activeTextColor.dataset.label : tc;
+    }
+
+    if (metaFont) {
+      metaFont.textContent = (
+        activeFont && activeFont.dataset.label
+      ) ? activeFont.dataset.label : 'Выберите шрифт';
+    }
+  }
+
+  function countPersonLines(){
+    if(!personsListInput) return 0;
+
+    return personsListInput.value
+      .split(/\r?\n/)
+      .map(line => line.trim())
+      .filter(Boolean)
+      .length;
+  }
+
+  function updatePersonsStatus(syncCount){
+    const linesCount = countPersonLines();
+
+    if(personsLineCount){
+      personsLineCount.textContent = String(linesCount);
+    }
+
+    if(syncCount && personsCountInput && linesCount > 0){
+      personsCountInput.value = String(linesCount);
+    }
+
+    const declaredCount = personsCountInput
+      ? Number.parseInt(personsCountInput.value || '0', 10)
+      : 0;
+
+    if(!personsCountMessage || !personsCountStatus) return;
+
+    personsCountStatus.classList.remove(
+      'is-valid',
+      'is-warning',
+    );
+
+    if(linesCount === 0){
+      personsCountMessage.textContent = 'Добавьте список ФИО';
+      return;
+    }
+
+    if(declaredCount === linesCount){
+      personsCountMessage.textContent = 'Количество совпадает';
+      personsCountStatus.classList.add('is-valid');
+      return;
+    }
+
+    personsCountMessage.textContent = (
+      'Проверьте количество: указано '
+      + declaredCount
+      + ', строк в списке '
+      + linesCount
+    );
+
+    personsCountStatus.classList.add('is-warning');
+  }
+
+  function toggleGroup(){
+    if(!groupBlock || !isGroup) return;
+
+    groupBlock.style.display = isGroup.checked ? '' : 'none';
+
+    if(isGroup.checked){
+      updatePersonsStatus(true);
+    }
+  }
+
+  function scrollStrip(strip, dir){
+    if(!strip) return;
+    const firstItem = strip.querySelector('.ribbon-strip__item');
+    const step = firstItem ? (firstItem.getBoundingClientRect().width + 12) : 280;
+    strip.scrollBy({ left: dir * step * 1.2, behavior: 'smooth' });
+  }
+
+  document.addEventListener('click', (e) => {
+    const nav = e.target.closest('.ribbon-nav');
+    if(nav){
+      const sel = nav.getAttribute('data-scroll-target');
+      const strip = sel ? document.querySelector(sel) : null;
+      if(!strip) return;
+      const dir = nav.classList.contains('ribbon-nav--prev') ? -1 : 1;
+      scrollStrip(strip, dir);
+      return;
+    }
+
+    const colorBtn = e.target.closest('.js-color');
+    if(colorBtn){
+      ribbonBgInput.value = colorBtn.dataset.color || '#1E4ED8';
+      setActive(document.querySelectorAll('.js-color'), colorBtn);
+      update();
+      return;
+    }
+
+    const tcBtn = e.target.closest('.js-textcolor');
+    if(tcBtn){
+      textColorInput.value = tcBtn.dataset.color || '#FFFFFF';
+      setActive(document.querySelectorAll('.js-textcolor'), tcBtn);
+      update();
+      return;
+    }
+
+    const fontBtn = e.target.closest('.js-font');
+    if(fontBtn){
+      fontFamilyInput.value = fontBtn.dataset.font || "'Montserrat', sans-serif";
+      ensureFontLink(fontBtn.dataset.fontUrl);
+      setActive(document.querySelectorAll('.js-font'), fontBtn);
+      update();
+      return;
+    }
+  });
+
+  if (textInput) {
+    textInput.addEventListener('input', update);
+  }
+
+  if (isGroup) {
+    isGroup.addEventListener('change', toggleGroup);
+  }
+
+  if (personsListInput) {
+    personsListInput.addEventListener('input', () => {
+      updatePersonsStatus(true);
+    });
+  }
+
+  if (personsCountInput) {
+    personsCountInput.addEventListener('input', () => {
+      updatePersonsStatus(false);
+    });
+  }
+
+  let submitting = false;
+
+  if(orderForm && submitButton){
+    orderForm.addEventListener('submit', (event) => {
+      if(submitting){
+        event.preventDefault();
+        return;
+      }
+
+      submitting = true;
+      submitButton.disabled = true;
+      submitButton.classList.add('is-loading');
+
+      const submitText = submitButton.querySelector(
+        '[data-submit-text]'
+      );
+
+      if(submitText){
+        submitText.textContent = 'Отправляем…';
+      }
+    });
+  }
+
+  toggleGroup();
+  updatePersonsStatus(false);
+
+  const colorBtns = [...document.querySelectorAll('.js-color')];
+  const initColor = colorBtns.find(b => (b.dataset.color || '').toLowerCase() === (ribbonBgInput.value || '').toLowerCase());
+  if(initColor) setActive(colorBtns, initColor);
+
+  const textBtns = [...document.querySelectorAll('.js-textcolor')];
+  const initText = textBtns.find(b => (b.dataset.color || '').toLowerCase() === (textColorInput.value || '').toLowerCase());
+  if(initText) setActive(textBtns, initText);
+
+  const fontBtns = [...document.querySelectorAll('.js-font')];
+  const initFont = fontBtns.find(b => (b.dataset.font || '') === (fontFamilyInput.value || ''));
+  if(initFont){
+    ensureFontLink(initFont.dataset.fontUrl);
+    setActive(fontBtns, initFont);
+  }
+
+  update();
+  logLine('[init] bootstrap strip mode (no owl)');
+})();
+</script>
+
+{% endblock %}

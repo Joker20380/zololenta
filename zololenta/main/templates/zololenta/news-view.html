@@ -1,54 +1,731 @@
 {% extends 'zololenta/base.html' %}
 {% load static %}
 
-
-
-{% block description %}{{ news.title }}{% endblock %}
+{% block description %}
+  {% if news.slug == 'ceny-i-usloviya-zakaza' %}
+    Цены на именные выпускные ленты, дополнительные аксессуары, условия оплаты, изготовления и доставки.
+  {% else %}
+    {{ news.title }}
+  {% endif %}
+{% endblock %}
 
 {% block title %}{{ news.title }}{% endblock %}
 
-{% block content %} 
 
-<div class="hero-wrap hero-bread" style="background-image: url('{% static 'images/bg_6.jpg' %}');">
-	<div class="container">
-    	<div class="row no-gutters slider-text align-items-center justify-content-center">
-        	<div class="col-md-9 ftco-animate text-center">
-				<h1 class="mb-0 bread">{{ news.title }}</h1>
-        	</div>
-        </div>
-    </div>
-</div>
+{% block content %}
 
-        {% if messages %}
-        <div class="alert alert-success">
-        	{% for message in messages %}
-            {{ message }}
-            {% endfor %}
+{% if news.slug == 'ceny-i-usloviya-zakaza' %}
+
+  <!-- PRICE HERO -->
+  <section class="zl-price-hero">
+
+    <div class="zl-price-hero-overlay"></div>
+
+    <div class="container zl-price-hero-container">
+
+      <div class="zl-price-hero-grid">
+
+        <div class="zl-price-hero-copy">
+
+          <span class="zl-price-overline">
+            Цены и условия заказа
+          </span>
+
+          <h1>
+            Понятная стоимость
+            <span>без скрытых доплат</span>
+          </h1>
+
+          <p>
+            Выберите подходящий вариант ленты.
+            Индивидуальный дизайн и подготовка макета
+            уже входят в стоимость заказа.
+          </p>
+
+          <div class="zl-price-hero-actions">
+
+            <a href="{% url 'ribbon_constructor' %}"
+               class="btn btn-primary zl-price-primary-button">
+              Создать свою ленту
+            </a>
+
+            <a href="#zl-price-options"
+               class="btn zl-price-secondary-button">
+              Посмотреть цены
+            </a>
+
+          </div>
+
         </div>
+
+
+        {% if news.photo %}
+          <div class="zl-price-hero-image">
+
+            <img src="{{ news.photo.url }}"
+                 alt="Выпускные ленты — цены и условия заказа">
+
+            <span class="zl-price-image-badge">
+              Макет до печати
+            </span>
+
+          </div>
         {% endif %}
-    
 
-    <section class="section">
-      <div class="container">
-        <div class="row">
-          <div class="col-12">
-          	{% if news.photo %}
-          	<p><img src="{{ news.photo.url }}" alt="{{ news.title }}" class="img-fluid"></p>
-          	{% else %}
-            <p><img src="{% static 'images/no_photo.webp' %}" alt="нет фото" class="img-fluid"></p>
-            {% endif %}
-          </div>
-        </div>
-        <div class="row justify-content-center">
-          <div class="col-md-8 mb-5">
-          </div>
-        </div>
-        <div class="row justify-content-center">
-          <div class="col-md-12 mb-5">
-            <p>{% autoescape off %}{{ news.content }}{% endautoescape %}</p>
-          </div>
-        </div>
       </div>
+
+    </div>
+
+  </section>
+
+
+  {% if messages %}
+    <div class="container zl-price-messages">
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags|default:'success' }}">
+          {{ message }}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+
+  <!-- MAIN PRICES -->
+  <section id="zl-price-options"
+           class="zl-price-options">
+
+    <div class="container">
+
+      <header class="zl-price-section-header">
+
+        <span class="zl-price-overline">
+          Выпускные ленты
+        </span>
+
+        <h2>
+          Выберите вариант
+          <span>печати и оформления</span>
+        </h2>
+
+        <p>
+          Стоимость указана за одну ленту
+          при коллективном заказе на класс.
+        </p>
+
+      </header>
+
+
+      <div class="zl-price-main-grid">
+
+        <article class="zl-price-main-card">
+
+          <div class="zl-price-card-top">
+
+            <span class="zl-price-card-label">
+              Классический вариант
+            </span>
+
+            <h3>Стандартная печать</h3>
+
+            <p>
+              Золото, серебро, чёрный, красный, синий,
+              белый, винный, зелёный или сиреневый цвет.
+            </p>
+
+          </div>
+
+          <div class="zl-price-value">
+            <strong>270 ₽</strong>
+            <span>за одну ленту</span>
+          </div>
+
+        </article>
+
+
+        <article class="zl-price-main-card zl-price-main-card-featured">
+
+          <span class="zl-price-popular">
+            Эффектный вариант
+          </span>
+
+          <div class="zl-price-card-top">
+
+            <span class="zl-price-card-label">
+              Праздничное оформление
+            </span>
+
+            <h3>Голографическая печать</h3>
+
+            <p>
+              Переливающаяся надпись, которая заметно
+              выделяется на фотографиях и при освещении.
+            </p>
+
+          </div>
+
+          <div class="zl-price-value">
+            <strong>300 ₽</strong>
+            <span>за одну ленту</span>
+          </div>
+
+        </article>
+
+
+        <article class="zl-price-main-card">
+
+          <div class="zl-price-card-top">
+
+            <span class="zl-price-card-label">
+              Особый дизайн
+            </span>
+
+            <h3>Лента-триколор</h3>
+
+            <p>
+              Выпускная лента в цветах российского
+              триколора с индивидуальной надписью.
+            </p>
+
+          </div>
+
+          <div class="zl-price-value">
+            <strong>530 ₽</strong>
+            <span>за одну ленту</span>
+          </div>
+
+        </article>
+
+      </div>
+
+
+      <div class="zl-price-bonus-grid">
+
+        <article class="zl-price-bonus-card">
+
+          <span class="zl-price-bonus-icon">01</span>
+
+          <div>
+            <h3>Лента классному руководителю в подарок</h3>
+
+            <p>
+              При коллективном заказе от 10 лент.
+            </p>
+          </div>
+
+        </article>
+
+
+        <article class="zl-price-bonus-card">
+
+          <span class="zl-price-bonus-icon">02</span>
+
+          <div>
+            <h3>Индивидуальный дизайн бесплатно</h3>
+
+            <p>
+              Учтём пожелания и согласуем макет до печати.
+            </p>
+          </div>
+
+        </article>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- ACCESSORIES -->
+  <section class="zl-price-accessories">
+
+    <div class="container">
+
+      <header class="zl-price-section-header zl-price-section-header-light">
+
+        <span class="zl-price-overline">
+          Дополнительное оформление
+        </span>
+
+        <h2>
+          Аксессуары
+          <span>для выпускного образа</span>
+        </h2>
+
+        <p>
+          Их можно добавить к основному заказу
+          в необходимом количестве.
+        </p>
+
+      </header>
+
+
+      <div class="zl-price-accessories-grid">
+
+        <article class="zl-price-accessory-card">
+          <span>Колокольчик без печати</span>
+          <strong>100 ₽</strong>
+        </article>
+
+        <article class="zl-price-accessory-card">
+          <span>Колокольчик с вашей надписью</span>
+          <strong>140 ₽</strong>
+        </article>
+
+        <article class="zl-price-accessory-card">
+          <span>Бант</span>
+          <strong>300 ₽</strong>
+        </article>
+
+        <article class="zl-price-accessory-card">
+          <span>Галстук-бабочка</span>
+          <strong>300 ₽</strong>
+        </article>
+
+        <article class="zl-price-accessory-card">
+          <span>Бутоньерка</span>
+          <strong>270 ₽</strong>
+        </article>
+
+        <article class="zl-price-accessory-card">
+          <span>Список учеников или пожелание на ленте учителя</span>
+          <strong>+100 ₽</strong>
+        </article>
+
+      </div>
+
+
+      <div class="zl-price-individual">
+
+        <div>
+          <span class="zl-price-overline">
+            Индивидуальный расчёт
+          </span>
+
+          <h3>
+            Ленты для свадьбы, дня рождения,
+            юбилея и других событий
+          </h3>
+
+          <p>
+            Стоимость зависит от оформления, количества,
+            текста и выбранных материалов.
+          </p>
+        </div>
+
+        <a href="{% url 'contacts' %}"
+           class="btn zl-price-individual-button">
+          Узнать стоимость
+        </a>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- ORDER CONDITIONS -->
+  <section class="zl-price-conditions">
+
+    <div class="container">
+
+      <div class="zl-price-conditions-layout">
+
+        <div class="zl-price-conditions-copy">
+
+          <span class="zl-price-overline">
+            Условия заказа
+          </span>
+
+          <h2>
+            Спокойный процесс
+            <span>от макета до отправки</span>
+          </h2>
+
+          <p>
+            Заказ запускается в работу только после того,
+            как вы проверили и подтвердили оформление.
+          </p>
+
+        </div>
+
+
+        <div class="zl-price-condition-list">
+
+          <article>
+            <span>01</span>
+
+            <div>
+              <h3>Согласование макета</h3>
+
+              <p>
+                Проверяем имена, надписи, цвета
+                и расположение элементов до печати.
+              </p>
+            </div>
+          </article>
+
+
+          <article>
+            <span>02</span>
+
+            <div>
+              <h3>Предоплата 50%</h3>
+
+              <p>
+                Первая часть оплачивается после
+                согласования макета.
+              </p>
+            </div>
+          </article>
+
+
+          <article>
+            <span>03</span>
+
+            <div>
+              <h3>Оставшиеся 50%</h3>
+
+              <p>
+                Вторая часть оплачивается после изготовления,
+                перед отправкой заказа.
+              </p>
+            </div>
+          </article>
+
+
+          <article>
+            <span>04</span>
+
+            <div>
+              <h3>Доставка Почтой России</h3>
+
+              <p>
+                Готовый заказ аккуратно упаковывается
+                и отправляется получателю.
+              </p>
+            </div>
+          </article>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- ORDER CHECKLIST -->
+  <section class="zl-price-checklist">
+
+    <div class="container">
+
+      <div class="zl-price-checklist-card">
+
+        <header>
+
+          <span class="zl-price-overline">
+            Что потребуется
+          </span>
+
+          <h2>
+            Подготовьте информацию
+            <span>для оформления заказа</span>
+          </h2>
+
+          <p>
+            Имена лучше отправлять обычным текстом
+            в столбик, а не фотографией списка.
+          </p>
+
+        </header>
+
+
+        <ol class="zl-price-checklist-list">
+
+          <li>
+            <span>01</span>
+            Список имён в столбик
+          </li>
+
+          <li>
+            <span>02</span>
+            Класс, школа, город или населённый пункт
+          </li>
+
+          <li>
+            <span>03</span>
+            Цвет ленты
+          </li>
+
+          <li>
+            <span>04</span>
+            Цвет надписи
+          </li>
+
+          <li>
+            <span>05</span>
+            Пример желаемого дизайна
+          </li>
+
+          <li>
+            <span>06</span>
+            Количество колокольчиков
+          </li>
+
+          <li>
+            <span>07</span>
+            Количество галстуков-бабочек
+          </li>
+
+          <li>
+            <span>08</span>
+            Количество бантов
+          </li>
+
+        </ol>
+
+
+        <div class="zl-price-checklist-actions">
+
+          <a href="{% url 'ribbon_constructor' %}"
+             class="btn btn-primary">
+            Собрать макет
+          </a>
+
+          <a href="{% url 'contacts' %}"
+             class="btn zl-price-outline-button">
+            Задать вопрос
+          </a>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+{% else %}
+
+  <!-- REGULAR NEWS ARTICLE -->
+  <article class="zl-article">
+
+    <header class="zl-article-hero">
+
+      <div class="zl-article-hero-decoration"
+           aria-hidden="true"></div>
+
+      <div class="container">
+
+        <div class="zl-article-hero-content">
+
+          <nav class="zl-article-breadcrumbs"
+               aria-label="Навигационная цепочка">
+
+            <a href="{% url 'index' %}">
+              Главная
+            </a>
+
+            <span aria-hidden="true">/</span>
+
+            <a href="{% url 'blog' %}">
+              Новости
+            </a>
+
+            <span aria-hidden="true">/</span>
+
+            <span aria-current="page">
+              Материал
+            </span>
+
+          </nav>
+
+
+          <div class="zl-article-meta">
+
+            {% if news.cat %}
+              <span class="zl-article-category">
+                {{ news.cat }}
+              </span>
+            {% endif %}
+
+            <time datetime="{{ news.time_create|date:'Y-m-d' }}">
+              {{ news.time_create|date:"d.m.Y" }}
+            </time>
+
+          </div>
+
+
+          <h1>
+            {{ news.title }}
+          </h1>
+
+          <p class="zl-article-intro">
+            Материал журнала «Золотой ленты»:
+            идеи, рекомендации и примеры для подготовки
+            индивидуального оформления.
+          </p>
+
+        </div>
+
+      </div>
+
+    </header>
+
+
+    {% if messages %}
+      <section class="zl-article-messages">
+        <div class="container">
+
+          {% for message in messages %}
+            <div class="alert alert-{{ message.tags|default:'success' }}">
+              {{ message }}
+            </div>
+          {% endfor %}
+
+        </div>
+      </section>
+    {% endif %}
+
+
+    <section class="zl-article-main">
+
+      <div class="container">
+
+        <div class="zl-article-shell">
+
+          {% if news.photo %}
+            <figure class="zl-article-cover">
+
+              <img src="{{ news.photo.url }}"
+                   alt="{{ news.title }}">
+
+            </figure>
+          {% else %}
+            <div class="zl-article-cover zl-article-cover-placeholder">
+
+              <span>Золотая лента</span>
+
+              <strong>
+                Новости и идеи
+              </strong>
+
+            </div>
+          {% endif %}
+
+
+          <div class="zl-article-layout">
+
+            <aside class="zl-article-aside">
+
+              <div class="zl-article-aside-card">
+
+                <span class="zl-article-aside-label">
+                  Материал
+                </span>
+
+                <strong>
+                  {{ news.time_create|date:"d.m.Y" }}
+                </strong>
+
+                <a href="{% url 'blog' %}">
+                  ← Все публикации
+                </a>
+
+              </div>
+
+            </aside>
+
+
+            <div class="zl-article-body">
+
+              <div class="zl-article-content">
+
+                {% autoescape off %}
+                  {{ news.content }}
+                {% endautoescape %}
+
+              </div>
+
+
+              <footer class="zl-article-footer">
+
+                <div>
+
+                  <span>
+                    Журнал «Золотой ленты»
+                  </span>
+
+                  <p>
+                    Полезные материалы о выпускных лентах,
+                    цветах, шрифтах и персональном оформлении.
+                  </p>
+
+                </div>
+
+                <a href="{% url 'blog' %}"
+                   class="zl-article-back-link">
+
+                  Все новости
+                  <span aria-hidden="true">→</span>
+
+                </a>
+
+              </footer>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
     </section>
-    
-    {% endblock %}
+
+
+    <section class="zl-article-cta">
+
+      <div class="container">
+
+        <div class="zl-article-cta-card">
+
+          <div>
+
+            <span class="zl-article-overline">
+              Создайте свой вариант
+            </span>
+
+            <h2>
+              Подберите цвет,
+              <span>надпись и шрифт</span>
+            </h2>
+
+            <p>
+              Посмотрите предварительный результат
+              в конструкторе. Финальный макет согласуем
+              перед изготовлением.
+            </p>
+
+          </div>
+
+          <a href="{% url 'ribbon_constructor' %}"
+             class="btn zl-article-cta-button">
+            Открыть конструктор
+          </a>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </article>
+
+{% endif %}
+
+{% endblock %}

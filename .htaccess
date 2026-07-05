@@ -1,5 +1,16 @@
 Options +ExecCGI
 AddHandler wsgi-script .py
 RewriteEngine On
+
+# ZOLOLENTA SECURITY HARDENING
+# Блокируем прямые HTTP-запросы к внутренним файлам и каталогам.
+# THE_REQUEST не меняется при внутреннем rewrite, поэтому /wsgi.py
+# по-прежнему может использоваться как внутренний WSGI entrypoint.
+
+RewriteCond %{THE_REQUEST} "\s/+wsgi\.py(?:[/?\s]|$)" [NC,OR]
+RewriteCond %{THE_REQUEST} "\s/+.*\.(?:py|pyc|pyo|env|sql|sqlite|sqlite3|log|ini|conf|ya?ml|toml|bak|old|orig)(?:[/?\s]|$)" [NC,OR]
+RewriteCond %{THE_REQUEST} "\s/+.*(?:^|/)\.(?:git|svn|hg)(?:[/?\s]|$)" [NC,OR]
+RewriteCond %{THE_REQUEST} "\s/+.*(?:backups?|private_backups|tmp)(?:[/?\s]|$)" [NC]
+RewriteRule ^ - [F,L]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^(.*)$ /wsgi.py/$1 [QSA,PT,L]

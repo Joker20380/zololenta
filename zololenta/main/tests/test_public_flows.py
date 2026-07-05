@@ -196,7 +196,7 @@ class ContactsViewTests(TestCase):
         url = reverse("contacts")
         resp = self.client.post(
             url,
-            data={"name": "John", "email": "john@example.com", "message": "Hi", "contact": "999999"},
+            data={"name": "John", "email": "john@example.com", "message": "Hello", "contact": "999999"},
             follow=True,
         )
 

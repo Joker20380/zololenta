@@ -31,3 +31,7 @@ staticfiles/
 .idea/
 .vscode/
 EOF
+/backups/
+/tmp/
+/zololenta/.env
+/zololenta/main/views.py.broken_*

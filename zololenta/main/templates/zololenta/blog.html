@@ -1,0 +1,449 @@
+{% extends 'zololenta/base.html' %}
+{% load static %}
+
+{% block description %}
+Новости, идеи и полезные материалы о выпускных лентах, оформлении, цветах, надписях и подготовке группового заказа.
+{% endblock %}
+
+{% block title %}Новости и идеи{% endblock %}
+
+
+{% block content %}
+
+<!-- BLOG HERO -->
+<section class="zl-blog-hero">
+
+  <div class="zl-blog-hero-decoration"
+       aria-hidden="true"></div>
+
+  <div class="container">
+
+    <div class="zl-blog-hero-content">
+
+      <nav class="zl-blog-breadcrumbs"
+           aria-label="Навигационная цепочка">
+
+        <a href="{% url 'index' %}">
+          Главная
+        </a>
+
+        <span aria-hidden="true">/</span>
+
+        <span>Новости</span>
+
+      </nav>
+
+      <span class="zl-blog-overline">
+        Журнал «Золотой ленты»
+      </span>
+
+      <h1>
+        Новости, идеи
+        <span>и полезные материалы</span>
+      </h1>
+
+      <p>
+        Рассказываем, как выбрать цвет, текст и оформление
+        выпускной ленты, подготовить список имён
+        и согласовать единый макет для класса.
+      </p>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+{% if messages %}
+  <section class="zl-blog-messages">
+    <div class="container">
+
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags|default:'success' }}">
+          {{ message }}
+        </div>
+      {% endfor %}
+
+    </div>
+  </section>
+{% endif %}
+
+
+<!-- ARTICLES -->
+<section class="zl-blog-main">
+
+  <div class="container">
+
+    {% if news %}
+
+      {% if page_obj.number == 1 %}
+
+        {% with featured=news.0 %}
+          <article class="zl-blog-featured">
+
+            <a href="{{ featured.get_absolute_url }}"
+               class="zl-blog-featured-media"
+               aria-label="{{ featured.title }}">
+
+              {% if featured.photo %}
+                <img src="{{ featured.photo.url }}"
+                     alt="{{ featured.title }}">
+              {% else %}
+                <span class="zl-blog-image-placeholder">
+                  <small>Золотая лента</small>
+                  <strong>Новости и идеи</strong>
+                </span>
+              {% endif %}
+
+            </a>
+
+
+            <div class="zl-blog-featured-content">
+
+              <div class="zl-blog-meta">
+
+                <span>Главный материал</span>
+
+                <time datetime="{{ featured.time_create|date:'Y-m-d' }}">
+                  {{ featured.time_create|date:"d.m.Y" }}
+                </time>
+
+              </div>
+
+              <h2>
+                <a href="{{ featured.get_absolute_url }}">
+                  {{ featured.title }}
+                </a>
+              </h2>
+
+              <p>
+                {{ featured.content|striptags|truncatewords:38 }}
+              </p>
+
+              <a href="{{ featured.get_absolute_url }}"
+                 class="zl-blog-read-link">
+
+                Читать материал
+                <span aria-hidden="true">→</span>
+
+              </a>
+
+            </div>
+
+          </article>
+        {% endwith %}
+
+      {% endif %}
+
+
+      <div class="zl-blog-section-heading">
+
+        <div>
+          <span class="zl-blog-overline">
+            Все публикации
+          </span>
+
+          <h2>Последние материалы</h2>
+        </div>
+
+        <p>
+          Практические рекомендации, примеры оформления
+          и новости мастерской.
+        </p>
+
+      </div>
+
+
+      <div class="zl-blog-grid">
+
+        {% if page_obj.number == 1 %}
+
+          {% for n in news|slice:"1:" %}
+
+            <article class="zl-blog-card">
+
+              <a href="{{ n.get_absolute_url }}"
+                 class="zl-blog-card-media"
+                 aria-label="{{ n.title }}">
+
+                {% if n.photo %}
+                  <img src="{{ n.photo.url }}"
+                       alt="{{ n.title }}"
+                       loading="lazy"
+                       decoding="async">
+                {% else %}
+                  <span class="zl-blog-image-placeholder">
+                    <small>Золотая лента</small>
+                    <strong>Полезный материал</strong>
+                  </span>
+                {% endif %}
+
+              </a>
+
+
+              <div class="zl-blog-card-body">
+
+                <time datetime="{{ n.time_create|date:'Y-m-d' }}">
+                  {{ n.time_create|date:"d.m.Y" }}
+                </time>
+
+                <h3>
+                  <a href="{{ n.get_absolute_url }}">
+                    {{ n.title }}
+                  </a>
+                </h3>
+
+                <p>
+                  {{ n.content|striptags|truncatewords:22 }}
+                </p>
+
+                <a href="{{ n.get_absolute_url }}"
+                   class="zl-blog-card-link">
+
+                  Читать
+                  <span aria-hidden="true">→</span>
+
+                </a>
+
+              </div>
+
+            </article>
+
+          {% endfor %}
+
+        {% else %}
+
+          {% for n in news %}
+
+            <article class="zl-blog-card">
+
+              <a href="{{ n.get_absolute_url }}"
+                 class="zl-blog-card-media"
+                 aria-label="{{ n.title }}">
+
+                {% if n.photo %}
+                  <img src="{{ n.photo.url }}"
+                       alt="{{ n.title }}"
+                       loading="lazy"
+                       decoding="async">
+                {% else %}
+                  <span class="zl-blog-image-placeholder">
+                    <small>Золотая лента</small>
+                    <strong>Полезный материал</strong>
+                  </span>
+                {% endif %}
+
+              </a>
+
+
+              <div class="zl-blog-card-body">
+
+                <time datetime="{{ n.time_create|date:'Y-m-d' }}">
+                  {{ n.time_create|date:"d.m.Y" }}
+                </time>
+
+                <h3>
+                  <a href="{{ n.get_absolute_url }}">
+                    {{ n.title }}
+                  </a>
+                </h3>
+
+                <p>
+                  {{ n.content|striptags|truncatewords:22 }}
+                </p>
+
+                <a href="{{ n.get_absolute_url }}"
+                   class="zl-blog-card-link">
+
+                  Читать
+                  <span aria-hidden="true">→</span>
+
+                </a>
+
+              </div>
+
+            </article>
+
+          {% endfor %}
+
+        {% endif %}
+
+      </div>
+
+
+      {% if is_paginated %}
+        <nav class="zl-blog-pagination"
+             aria-label="Навигация по страницам">
+
+          {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}"
+               class="zl-blog-pagination-direction">
+              ← Назад
+            </a>
+          {% else %}
+            <span class="zl-blog-pagination-direction is-disabled">
+              ← Назад
+            </span>
+          {% endif %}
+
+
+          <div class="zl-blog-pagination-pages">
+
+            {% for page_number in paginator.page_range %}
+
+              {% if page_number == page_obj.number %}
+                <span class="is-current"
+                      aria-current="page">
+                  {{ page_number }}
+                </span>
+
+              {% elif page_number >= page_obj.number|add:"-2" and page_number <= page_obj.number|add:"2" %}
+                <a href="?page={{ page_number }}">
+                  {{ page_number }}
+                </a>
+              {% endif %}
+
+            {% endfor %}
+
+          </div>
+
+
+          {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}"
+               class="zl-blog-pagination-direction">
+              Вперёд →
+            </a>
+          {% else %}
+            <span class="zl-blog-pagination-direction is-disabled">
+              Вперёд →
+            </span>
+          {% endif %}
+
+        </nav>
+      {% endif %}
+
+
+    {% else %}
+
+      <div class="zl-blog-empty">
+
+        <span class="zl-blog-overline">
+          Скоро здесь появятся материалы
+        </span>
+
+        <h2>Публикаций пока нет</h2>
+
+        <p>
+          Мы готовим полезные статьи о выпускных лентах,
+          цветах, шрифтах и персональном оформлении.
+        </p>
+
+        <a href="{% url 'ribbon_constructor' %}"
+           class="btn btn-primary">
+          Перейти в конструктор
+        </a>
+
+      </div>
+
+    {% endif %}
+
+  </div>
+
+</section>
+
+
+<!-- CTA -->
+<section class="zl-blog-cta">
+
+  <div class="container">
+
+    <div class="zl-blog-cta-card">
+
+      <div>
+
+        <span class="zl-blog-overline">
+          Попробуйте прямо сейчас
+        </span>
+
+        <h2>
+          Создайте предварительный
+          <span>макет своей ленты</span>
+        </h2>
+
+        <p>
+          Выберите цвет, надпись и шрифт.
+          Финальный макет согласуем перед изготовлением.
+        </p>
+
+      </div>
+
+      <a href="{% url 'ribbon_constructor' %}"
+         class="btn zl-blog-cta-button">
+        Открыть конструктор
+      </a>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- REVIEWS -->
+{% if view.all_reviews %}
+  <section class="zl-blog-reviews">
+
+    <div class="container">
+
+      <header class="zl-blog-reviews-heading">
+
+        <span class="zl-blog-overline">
+          Отзывы
+        </span>
+
+        <h2>Что говорят наши заказчики</h2>
+
+      </header>
+
+
+      <div class="nonloop-block-11 owl-carousel">
+
+        {% for r in view.all_reviews %}
+          <article class="zl-blog-review-card">
+
+            <div class="zl-blog-review-photo">
+
+              {% if r.photo %}
+                <img src="{{ r.photo.url }}"
+                     alt="{{ r.name|default:'Отзыв заказчика' }}"
+                     loading="lazy">
+              {% else %}
+                <span aria-hidden="true">“</span>
+              {% endif %}
+
+            </div>
+
+            <div>
+
+              <p>
+                {{ r.body|default:"Спасибо за ваш отзыв." }}
+              </p>
+
+              <strong>
+                {{ r.name|default:"Заказчик" }}
+              </strong>
+
+            </div>
+
+          </article>
+        {% endfor %}
+
+      </div>
+
+    </div>
+
+  </section>
+{% endif %}
+
+{% endblock %}

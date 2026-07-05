@@ -4,14 +4,12 @@
 <!DOCTYPE html>
 <html lang="ru">
   <head>
-    <title>Золотая лента</title>
+    <title>{% block title %}Золотая лента{% endblock %}</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="{% block description %}Именные и выпускные ленты «Золотая лента».{% endblock %}">
     
-    <link href="https://fonts.googleapis.com/css?family=Lato:100,300,400,700,900" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:300,400,700" rel="stylesheet">
-
-    <link rel="stylesheet" href="{% static 'css/open-iconic-bootstrap.min.css' %}">
+<link rel="stylesheet" href="{% static 'css/open-iconic-bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/animate.css' %}">
     
     <link rel="stylesheet" href="{% static 'css/owl.carousel.min.css' %}">
@@ -29,12 +27,18 @@
     <link rel="stylesheet" href="{% static 'css/flaticon.css' %}">
     <link rel="stylesheet" href="{% static 'css/icomoon.css' %}">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+
   </head>
   <body>
 
     <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
 	    <div class="container">
-	      <a class="navbar-brand" href="{% url 'index' %}"><img style="width:120px"src="{% static 'images/zololenta_logo.png' %}" alt="Logo"></a>
+	      <a class="navbar-brand" href="{% url 'index' %}"><img style="width:120px"src="{% static 'images/zololenta_logo.png'%}" alt="Logo"></a>
 	      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
 	        <span class="oi oi-menu"></span> Меню
 	      </button>
@@ -42,9 +46,9 @@
 	      <div class="collapse navbar-collapse" id="ftco-nav">
 	        <ul class="navbar-nav ml-auto">
 	          <li class="nav-item active"><a href="{% url 'index' %}" class="nav-link">Домой</a></li>
-              <li class="nav-item"><a href="https://zololenta.ru/news/ceny-i-usloviya-zakaza/" class="nav-link">Цены</a></li>
-	          <li class="nav-item"><a href="https://zololenta.ru/news/razdel-v-razrabotke/" class="nav-link">О нас</a></li>
-	          <li class="nav-item"><a href="#" class="nav-link">Новости</a></li>
+              <li class="nav-item"><a href="{% url 'news' news_slug='ceny-i-usloviya-zakaza' %}" class="nav-link">Цены</a></li>
+	          <li class="nav-item"><a href="{% url 'ribbon_constructor' %}" class="nav-link">Конструктор</a></li>
+	          <li class="nav-item"><a href="{% url 'blog' %}" class="nav-link">Новости</a></li>
 	          <li class="nav-item"><a href="{% url 'contacts' %}" class="nav-link">Контакты</a></li>
 
 	        </ul>
@@ -61,93 +65,250 @@
 {% endblock %}
 
         		
-	<section class="ftco-section-parallax">
-      <div class="parallax-img d-flex align-items-center">
-        <div class="container">
-          <div class="row d-flex justify-content-center py-5">
-            <div class="col-md-7 text-center heading-section ftco-animate">
-            	<h1 class="big">Подписка</h1>
-              <h2>Подпишитесь на наши новости</h2>
-              <div class="row d-flex justify-content-center mt-5">
-                <div class="col-md-8">
-                  <form method="post" action="{% url 'subscribe' %}" class="subscribe-form">
-                    <div class="form-group d-flex">
-                    	{% csrf_token %}
-						{{ subscriber_form.email }}
-                      <input type="submit" value="Подписаться" class="submit px-3">
-                    </div>
-                  </form>
-                  <div class="newsletter_unsubscribe_link"><a href="{% url 'unsubscribe_request' %}">отписаться</a></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-    <footer class="ftco-footer bg-light ftco-section">
+
+    <!-- NEWSLETTER -->
+    <section class="zl-newsletter"
+             aria-labelledby="zl-newsletter-title">
+
       <div class="container">
-        <div class="row mb-5">
-          <div class="col-md">
-            <div class="ftco-footer-widget mb-4">
-              <a class="navbar-brand" href="{% url 'index' %}"><img style="width:120px"src="{% static 'images/zololenta_logo.png' %}" alt="Logo"></a>
-              <ul class="ftco-footer-social list-unstyled float-md-left float-lft mt-5">
-                <li class="ftco-animate"><a href="#"><span class="icon-twitter"></span></a></li>
-                <li class="ftco-animate"><a href="#"><span class="icon-facebook"></span></a></li>
-                <li class="ftco-animate"><a href="#"><span class="icon-instagram"></span></a></li>
-              </ul>
-            </div>
+
+        <div class="zl-newsletter-card">
+
+          <div class="zl-newsletter-copy">
+
+            <span class="zl-newsletter-overline">
+              Новости и идеи
+            </span>
+
+            <h2 id="zl-newsletter-title">
+              Подпишитесь на
+              <span>«Золотую ленту»</span>
+            </h2>
+
+            <p>
+              Новые варианты оформления, полезные материалы
+              и идеи для выпускных мероприятий — без лишних писем.
+            </p>
+
           </div>
-          <div class="col-md">
-            <div class="ftco-footer-widget mb-4 ml-md-5">
-              <h2 class="ftco-heading-2">Меню</h2>
-              <ul class="list-unstyled">
-                <li><a href="#" class="py-2 d-block">Магазин</a></li>
-                <li><a href="#" class="py-2 d-block">О нас</a></li>
-                <li><a href="#" class="py-2 d-block">Новости</a></li>
-                <li><a href="{% url 'contacts' %}" class="py-2 d-block">Контакты</a></li>
-              </ul>
-            </div>
+
+
+          <div class="zl-newsletter-form-wrap">
+
+            <form method="post"
+                  action="{% url 'subscribe' %}"
+                  class="zl-newsletter-form">
+
+              {% csrf_token %}
+
+              <div class="zl-newsletter-field">
+                {{ subscriber_form.email }}
+              </div>
+
+              <button type="submit"
+                      class="zl-newsletter-submit">
+                Подписаться
+                <span aria-hidden="true">→</span>
+              </button>
+
+            </form>
+
+            <p class="zl-newsletter-note">
+              Нажимая кнопку, вы соглашаетесь с
+              <a href="{% url 'confidential_information' %}">
+                политикой конфиденциальности
+              </a>.
+              Уже подписаны?
+              <a href="{% url 'unsubscribe_request' %}">
+                Отписаться
+              </a>
+            </p>
+
           </div>
-          <div class="col-md-4">
-             <div class="ftco-footer-widget mb-4">
-              <h2 class="ftco-heading-2">Помощь</h2>
-              <div class="d-flex">
-	              <ul class="list-unstyled mr-l-5 pr-l-3 mr-4">
-	                <li><a href="#" class="py-2 d-block">Цвета</a></li>
-	                <li><a href="#" class="py-2 d-block">Примеры работ</a></li>
-	                <li><a href="#" class="py-2 d-block">Материалы</a></li>
-	                <li><a href="{% url 'confidential_information' %}" class="py-2 d-block">Политика конфиденциальности</a></li>
-	              </ul>
-	              <ul class="list-unstyled">
-	                <li><a href="#" class="py-2 d-block">FAQ</a></li>
-	                <li><a href="{% url 'contacts' %}" class="py-2 d-block">Контакты</a></li>
-	              </ul>
-	            </div>
-            </div>
-          </div>
-          <div class="col-md">
-            <div class="ftco-footer-widget mb-4">
-            	<h2 class="ftco-heading-2">Остались вопросы?</h2>
-            	<div class="block-23 mb-3">
-	              <ul>
-	                <li><span class="icon icon-map-marker"></span><span class="text">г. Владикавказ</span></li>
-	                <li><a href="#"><span class="icon icon-phone"></span><span class="text">+7 928 934 3206</span></a></li>
-	                <li><a href="#"><span class="icon icon-envelope"></span><span class="text">zollenta@mail.ru</span></a></li>
-	              </ul>
-	            </div>
-            </div>
-          </div>
+
         </div>
-        <div class="row">
-        	<div class="col-md-12 text-center">
-				<p>
-            		Этот сайт разработан фирмой <a href="#" target="_blank" class="text-primary">WhiteCat</a> <script>document.write(new Date().getFullYear());</script>
-        		</p>			
-        	</div>
-        </div>
+
       </div>
+
+    </section>
+
+
+    <!-- FOOTER -->
+    <footer class="zl-site-footer">
+
+      <div class="container">
+
+        <div class="zl-site-footer-main">
+
+          <div class="zl-site-footer-brand">
+
+            <a href="{% url 'index' %}"
+               class="zl-site-footer-logo"
+               aria-label="Золотая лента — главная">
+
+              <img src="{% static 'images/zololenta_logo.png' %}"
+                   alt="Золотая лента">
+            </a>
+
+            <p>
+              Именные выпускные и упаковочные ленты
+              с индивидуальным текстом и согласованием макета
+              перед печатью.
+            </p>
+
+            <div class="zl-site-footer-socials">
+
+              <a href="https://pin.it/57BKl4XDF"
+                 target="_blank"
+                 rel="noopener noreferrer"
+                 aria-label="Золотая лента в Pinterest">
+                <span class="icon-pinterest"></span>
+              </a>
+
+              <a href="https://t.me/zolotayalenta"
+                 target="_blank"
+                 rel="noopener noreferrer"
+                 aria-label="Золотая лента в Telegram">
+                <span class="icon-telegram"></span>
+              </a>
+
+              <a href="https://www.instagram.com/zolotaya_lenta_?igsh=aTE4MzBmdGJhd3p2"
+                 target="_blank"
+                 rel="noopener noreferrer"
+                 aria-label="Золотая лента в Instagram">
+                <span class="icon-instagram"></span>
+              </a>
+
+            </div>
+
+          </div>
+
+
+          <nav class="zl-site-footer-column"
+               aria-label="Разделы сайта">
+
+            <h2>Разделы</h2>
+
+            <ul>
+              <li>
+                <a href="{% url 'ribbon_constructor' %}">
+                  Конструктор ленты
+                </a>
+              </li>
+
+              <li>
+                <a href="{% url 'index' %}#section-examples">
+                  Примеры работ
+                </a>
+              </li>
+
+              <li>
+                <a href="{% url 'index' %}#section-package">
+                  Упаковочные ленты
+                </a>
+              </li>
+
+              <li>
+                <a href="{% url 'blog' %}">
+                  Полезные материалы
+                </a>
+              </li>
+            </ul>
+
+          </nav>
+
+
+          <nav class="zl-site-footer-column"
+               aria-label="Информация">
+
+            <h2>Информация</h2>
+
+            <ul>
+              <li>
+                <a href="{% url 'contacts' %}">
+                  Контакты
+                </a>
+              </li>
+
+              <li>
+                <a href="{% url 'index' %}#section-examples">
+                  Как выбрать ленту
+                </a>
+              </li>
+
+              <li>
+                <a href="{% url 'confidential_information' %}">
+                  Политика конфиденциальности
+                </a>
+              </li>
+
+              <li>
+                <a href="{% url 'unsubscribe_request' %}">
+                  Управление подпиской
+                </a>
+              </li>
+            </ul>
+
+          </nav>
+
+
+          <div class="zl-site-footer-column zl-site-footer-contacts">
+
+            <h2>Связаться</h2>
+
+            <address>
+
+              <a href="tel:+79289284479">
+                <span class="icon-phone"></span>
+
+                <span>
+                  <small>Телефон</small>
+                  +7 928 928-44-79
+                </span>
+              </a>
+
+              <a href="mailto:zollenta@mail.ru">
+                <span class="icon-envelope"></span>
+
+                <span>
+                  <small>Электронная почта</small>
+                  zollenta@mail.ru
+                </span>
+              </a>
+
+              <a href="{% url 'contacts' %}">
+                <span class="icon-map-marker"></span>
+
+                <span>
+                  <small>Адрес</small>
+                  Владикавказ, ТЦ «Столица»
+                </span>
+              </a>
+
+            </address>
+
+          </div>
+
+        </div>
+
+
+        <div class="zl-site-footer-bottom">
+
+          <p>
+            © {% now "Y" %} «Золотая лента».
+            Все права защищены.
+          </p>
+
+          <p>
+            Разработка сайта — WhiteCat
+          </p>
+
+        </div>
+
+      </div>
+
     </footer>
+
     
   
 
@@ -168,8 +329,10 @@
   <script src="{% static 'js/jquery.animateNumber.min.js' %}"></script>
   <script src="{% static 'js/bootstrap-datepicker.js' %}"></script>
   <script src="{% static 'js/scrollax.min.js' %}"></script>
+  {% block legacy_google_map_scripts %}
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
   <script src="{% static 'js/google-map.js' %}"></script>
+  {% endblock %}
   <script src="{% static 'js/main.js' %}"></script>
     {% include 'includes/cookie_notice.html' %}
   </body>
