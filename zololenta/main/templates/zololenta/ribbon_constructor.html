@@ -5,6 +5,7 @@
 {% block title %}Конструктор ленты{% endblock %}
 
 {% block content %}
+<link rel="stylesheet" href="{% static 'zololenta/css/ribbon-fonts.css' %}">
 
 <!-- CONSTRUCTOR HERO -->
 <section class="zl-constructor-hero">
@@ -159,7 +160,9 @@
                                    alt="{{ opt.news.title }}"
                                    loading="lazy" decoding="async">
                             {% else %}
-                              <div class="opt2-img opt2-img--placeholder" aria-hidden="true"></div>
+                              <div class="opt2-img opt2-img--placeholder opt2-img--color-preview"
+                                   style="background: {{ opt.css_value }};"
+                                   aria-hidden="true"></div>
                             {% endif %}
 
                             <span class="opt2-badge">
@@ -252,7 +255,7 @@
                         <button type="button"
                                 class="opt-card2 js-font"
                                 data-font="{{ opt.css_value }}"
-                                data-font-url="{{ opt.font_url }}"
+                                data-font-url=""
                                 data-label="{{ opt.news.title }}"
                                 aria-label="Шрифт: {{ opt.news.title }}">
                           <div class="opt2-media">

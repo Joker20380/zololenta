@@ -107,19 +107,79 @@ def _safe_hex(v: str, default: str) -> str:
     v = (v or "").strip()
     if len(v) == 7 and v.startswith("#"):
         return v.upper()
-    return default
+    return default.upper()
+
+
+def _human_color_value(title: str, hexv: str) -> str:
+    title = (title or "").strip()
+    hexv = _safe_hex(hexv, hexv or "#000000")
+
+    if title:
+        return f"{title} · {hexv}"
+
+    return hexv
+
+
+def _catalog_color_label(hexv: str) -> str:
+    """
+    Resolve ribbon color HEX through the active constructor catalog.
+
+    Orders store only HEX in ribbon_bg. Telegram needs a business label,
+    so we map HEX back to RibbonOption -> News.title.
+    """
+    hexv = _safe_hex(hexv, "#E9E5D3")
+
+    try:
+        from main.models import RibbonOption
+    except Exception:
+        return hexv
+
+    option = (
+        RibbonOption.objects
+        .filter(
+            opt_type=RibbonOption.TYPE_COLOR,
+            is_active=True,
+            news__cat_id=3,
+            css_value__iexact=hexv,
+        )
+        .select_related("news")
+        .order_by("-news__time_update", "id")
+        .first()
+    )
+
+    if option and option.news_id:
+        return _human_color_value(option.news.title, option.css_value)
+
+    return hexv
+
+
+TEXT_COLOR_LABELS = {
+    "#FFFFFF": "Белый",
+    "#111827": "Чёрный",
+    "#FFD36A": "Золото",
+    "#D1D5DB": "Серебро",
+}
 
 
 def _order_ribbon_color_label(order) -> str:
-    hexv = _safe_hex(getattr(order, "ribbon_bg", ""), "#1E4ED8")
+    hexv = _safe_hex(getattr(order, "ribbon_bg", ""), "#E9E5D3")
+
+    catalog_label = _catalog_color_label(hexv)
+    if catalog_label != hexv:
+        return catalog_label
 
     color_obj = getattr(order, "color_news", None)
     if color_obj is not None:
         title = getattr(color_obj, "title", None)
         if title:
-            return f"{title} ({hexv})"
+            return _human_color_value(title, hexv)
 
     return hexv
+
+
+def _text_color_label(hexv: str) -> str:
+    hexv = _safe_hex(hexv, "#FFFFFF")
+    return _human_color_value(TEXT_COLOR_LABELS.get(hexv, ""), hexv)
 
 
 def _order_font_label(order) -> str:
@@ -148,7 +208,7 @@ def format_order(order) -> str:
 
     ribbon_color = _order_ribbon_color_label(order)
     font_label = _order_font_label(order)
-    text_color = _safe_hex(getattr(order, "text_color", ""), "#FFFFFF")
+    text_color = _text_color_label(getattr(order, "text_color", ""))
 
     return (
         "🎓 *Заявка на ленты*\n\n"

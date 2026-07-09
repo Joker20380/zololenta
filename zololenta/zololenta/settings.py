@@ -158,6 +158,7 @@ USE_TZ = True
 # =========================
 STATIC_URL = "static/"
 STATIC_ROOT = "/home/j/joker2038/zololenta/public_html/static/"
+STATICFILES_DIRS = [BASE_DIR / "static"]
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = "/home/j/joker2038/zololenta/public_html/media/"

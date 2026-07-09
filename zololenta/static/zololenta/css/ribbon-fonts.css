@@ -1,0 +1,112 @@
+@font-face {
+  font-family: "Romantique Script";
+  src: url("../fonts/ribbon/romantique-script.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Good Vibes Pro";
+  src: url("../fonts/ribbon/good-vibes-pro.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Zither Script";
+  src: url("../fonts/ribbon/zither-script.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Grosvenor Script";
+  src: url("../fonts/ribbon/grosvenor-script.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Esenin Script";
+  src: url("../fonts/ribbon/esenin-script.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Mon Amour One";
+  src: url("../fonts/ribbon/monamourone-medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Magnolia Script";
+  src: url("../fonts/ribbon/magnolia-script.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Belissimo Script";
+  src: url("../fonts/ribbon/belissimo-script.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Mazurka Script";
+  src: url("../fonts/ribbon/mazurka-script.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Ceremonious One";
+  src: url("../fonts/ribbon/ceremoniousone.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Astoria Script One";
+  src: url("../fonts/ribbon/astoria-script-one.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+.opt2-img--font-preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px;
+  min-height: 92px;
+  font-size: 28px;
+  line-height: 1.05;
+  text-align: center;
+  color: #7a1430;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(255,255,255,.92), rgba(255,255,255,.68)),
+    linear-gradient(135deg, #fff7fb, #f7e1ea);
+}
+
+.opt2-img--color-preview {
+  display: block;
+  min-height: 92px;
+  border-radius: 18px;
+  box-shadow:
+    inset 0 0 0 1px rgba(17, 24, 39, .08),
+    inset 0 18px 35px rgba(255, 255, 255, .28),
+    inset 0 -18px 35px rgba(0, 0, 0, .10);
+}

@@ -283,9 +283,9 @@ class RibbonOrderForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields["ribbon_bg"].initial = "#1E4ED8"
+        self.fields["ribbon_bg"].initial = "#E9E5D3"
         self.fields["text_color"].initial = "#FFFFFF"
-        self.fields["font_family"].initial = "'Montserrat', sans-serif"
+        self.fields["font_family"].initial = "'Romantique Script', cursive"
 
         self.fields["text"].widget.attrs.update({
             "placeholder": "Например: Выпускник 2026 · 11-А класс",
@@ -331,7 +331,7 @@ class RibbonOrderForm(forms.ModelForm):
         ).exists()
 
     def clean_ribbon_bg(self):
-        v = (self.cleaned_data.get("ribbon_bg") or "").strip() or "#1E4ED8"
+        v = (self.cleaned_data.get("ribbon_bg") or "").strip() or "#E9E5D3"
         if not self._is_hex(v):
             raise forms.ValidationError("Некорректный цвет ленты.")
 
@@ -340,7 +340,7 @@ class RibbonOrderForm(forms.ModelForm):
         return v.upper()
 
     def clean_font_family(self):
-        v = (self.cleaned_data.get("font_family") or "").strip() or "'Montserrat', sans-serif"
+        v = (self.cleaned_data.get("font_family") or "").strip() or "'Romantique Script', cursive"
         if not self._active_option_exists(RibbonOption.TYPE_FONT, cat_id=4, value=v):
             raise forms.ValidationError("Выберите шрифт из каталога.")
         return v
