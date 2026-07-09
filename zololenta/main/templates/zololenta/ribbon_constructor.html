@@ -120,6 +120,11 @@
               </div>
 
               <!-- HIDDEN (мы управляем ими через клики по карточкам) -->
+              {{ form.ribbon_color }}
+              {{ form.ribbon_text_color }}
+              {{ form.ribbon_font }}
+              {{ form.ribbon_template }}
+
               {{ form.ribbon_bg }}
               {{ form.text_color }}
               {{ form.font_family }}
@@ -146,42 +151,43 @@
                   <button type="button" class="ribbon-nav ribbon-nav--prev" data-scroll-target="#ribbonColorStrip" aria-label="Назад">‹</button>
 
                   <div class="ribbon-strip" id="ribbonColorStrip" tabindex="0" aria-label="Каталог цветов ленты">
-                    {% for opt in ribbon_colors %}
+                    {% for color in ribbon_colors %}
                       <div class="ribbon-strip__item">
                         <button type="button"
                                 class="opt-card2 js-color"
-                                data-color="{{ opt.css_value }}"
-                                data-label="{{ opt.news.title }}"
-                                aria-label="Цвет: {{ opt.news.title }}">
+                                data-id="{{ color.id }}"
+                                data-color="{{ color.hex_value }}"
+                                data-label="{{ color.title }}"
+                                aria-label="Цвет: {{ color.title }}">
                           <div class="opt2-media">
-                            {% if opt.news.photo %}
+                            {% if color.image %}
                               <img class="opt2-img"
-                                   src="{{ opt.news.photo.url }}"
-                                   alt="{{ opt.news.title }}"
+                                   src="{{ color.image.url }}"
+                                   alt="{{ color.title }}"
                                    loading="lazy" decoding="async">
                             {% else %}
                               <div class="opt2-img opt2-img--placeholder opt2-img--color-preview"
-                                   style="background: {{ opt.css_value }};"
+                                   style="background: {{ color.hex_value }};"
                                    aria-hidden="true"></div>
                             {% endif %}
 
                             <span class="opt2-badge">
-                              <span class="opt2-swatch" style="background: {{ opt.css_value }};"></span>
-                              <span class="opt2-badge-text">{{ opt.news.title }}</span>
+                              <span class="opt2-swatch" style="background: {{ color.hex_value }};"></span>
+                              <span class="opt2-badge-text">{{ color.title }}</span>
                             </span>
 
                             <span class="opt2-check" aria-hidden="true">✓</span>
                           </div>
 
                           <div class="opt2-body">
-                            <div class="opt2-title">{{ opt.news.title }}</div>
+                            <div class="opt2-title">{{ color.title }}</div>
                             <div class="opt2-sub text-muted">Цвет ленты</div>
                           </div>
                         </button>
                       </div>
                     {% empty %}
                       <div class="ribbon-strip__item">
-                        <div class="text-muted p-3">Нет цветов (cat_id=3).</div>
+                        <div class="text-muted p-3">Нет активных цветов ленты.</div>
                       </div>
                     {% endfor %}
                   </div>
@@ -190,6 +196,7 @@
                 </div>
 
                 {% if form.ribbon_bg.errors %}<div class="text-danger mt-1">{{ form.ribbon_bg.errors }}</div>{% endif %}
+                {% if form.ribbon_color.errors %}<div class="text-danger mt-1">{{ form.ribbon_color.errors }}</div>{% endif %}
               </div>
 
               <!-- TEXT COLOR (простая сетка) -->
@@ -200,36 +207,64 @@
                 </div>
 
                 <div class="opt-grid opt-grid--mini mt-2" id="textColorGrid">
-                  <button type="button" class="opt-mini js-textcolor" data-color="#FFFFFF" data-label="Белый" aria-label="Белый текст">
-                    <span class="mini-swatch" style="background:#FFFFFF;border:1px solid rgba(0,0,0,.15)"></span>
-                    <span class="mini-title">Белый</span>
-                    <span class="mini-check" aria-hidden="true">✓</span>
-                  </button>
-
-                  <button type="button" class="opt-mini js-textcolor" data-color="#111827" data-label="Чёрный" aria-label="Чёрный текст">
-                    <span class="mini-swatch" style="background:#111827"></span>
-                    <span class="mini-title">Чёрный</span>
-                    <span class="mini-check" aria-hidden="true">✓</span>
-                  </button>
-
-                  <button type="button" class="opt-mini js-textcolor" data-color="#FFD36A" data-label="Золото" aria-label="Золотой текст">
-                    <span class="mini-swatch" style="background:#FFD36A"></span>
-                    <span class="mini-title">Золото</span>
-                    <span class="mini-check" aria-hidden="true">✓</span>
-                  </button>
-
-                  <button type="button" class="opt-mini js-textcolor" data-color="#D1D5DB" data-label="Серебро" aria-label="Серебро текст">
-                    <span class="mini-swatch" style="background:#D1D5DB"></span>
-                    <span class="mini-title">Серебро</span>
-                    <span class="mini-check" aria-hidden="true">✓</span>
-                  </button>
+                  {% for text_color in ribbon_text_colors %}
+                    <button type="button"
+                            class="opt-mini js-textcolor"
+                            data-id="{{ text_color.id }}"
+                            data-color="{{ text_color.hex_value }}"
+                            data-label="{{ text_color.title }}"
+                            aria-label="{{ text_color.title }} текст">
+                      <span class="mini-swatch"
+                            style="background: {{ text_color.hex_value }}; border:1px solid rgba(0,0,0,.15);"></span>
+                      <span class="mini-title">{{ text_color.title }}</span>
+                      <span class="mini-check" aria-hidden="true">✓</span>
+                    </button>
+                  {% empty %}
+                    <div class="text-muted p-3">Нет активных цветов текста.</div>
+                  {% endfor %}
                 </div>
 
                 {% if form.text_color.errors %}<div class="text-danger mt-1">{{ form.text_color.errors }}</div>{% endif %}
+                {% if form.ribbon_text_color.errors %}<div class="text-danger mt-1">{{ form.ribbon_text_color.errors }}</div>{% endif %}
               </div>
 
               <div class="zl-constructor-step-heading zl-constructor-step-heading-spaced">
                 <span>Шаг 03</span>
+                <div>
+                  <h2>Шаблон</h2>
+                  <p>
+                    Выберите базовый макет. Сейчас доступен классический вариант,
+                    дальше сюда добавим новые композиции.
+                  </p>
+                </div>
+              </div>
+
+              <div class="form-group mt-4">
+                <div class="d-flex align-items-end justify-content-between">
+                  <label class="mb-0">Шаблон ленты</label>
+                  <small class="text-muted">макет печати</small>
+                </div>
+
+                <div class="opt-grid opt-grid--templates mt-2" id="ribbonTemplateGrid">
+                  {% for template in ribbon_templates %}
+                    <button type="button"
+                            class="opt-mini js-template"
+                            data-id="{{ template.id }}"
+                            data-label="{{ template.title }}"
+                            aria-label="Шаблон: {{ template.title }}">
+                      <span class="mini-title">{{ template.title }}</span>
+                      <span class="mini-check" aria-hidden="true">✓</span>
+                    </button>
+                  {% empty %}
+                    <div class="text-muted p-3">Нет активных шаблонов.</div>
+                  {% endfor %}
+                </div>
+
+                {% if form.ribbon_template.errors %}<div class="text-danger mt-1">{{ form.ribbon_template.errors }}</div>{% endif %}
+              </div>
+
+              <div class="zl-constructor-step-heading zl-constructor-step-heading-spaced">
+                <span>Шаг 04</span>
                 <div>
                   <h2>Шрифт</h2>
                   <p>
@@ -250,19 +285,20 @@
                   <button type="button" class="ribbon-nav ribbon-nav--prev" data-scroll-target="#ribbonFontStrip" aria-label="Назад">‹</button>
 
                   <div class="ribbon-strip" id="ribbonFontStrip" tabindex="0" aria-label="Каталог шрифтов">
-                    {% for opt in ribbon_fonts %}
+                    {% for font in ribbon_fonts %}
                       <div class="ribbon-strip__item">
                         <button type="button"
                                 class="opt-card2 js-font"
-                                data-font="{{ opt.css_value }}"
+                                data-id="{{ font.id }}"
+                                data-font="{{ font.font_family }}"
                                 data-font-url=""
-                                data-label="{{ opt.news.title }}"
-                                aria-label="Шрифт: {{ opt.news.title }}">
+                                data-label="{{ font.title }}"
+                                aria-label="Шрифт: {{ font.title }}">
                           <div class="opt2-media">
-                            {% if opt.news.photo %}
+                            {% if font.preview_image %}
                               <img class="opt2-img"
-                                   src="{{ opt.news.photo.url }}"
-                                   alt="{{ opt.news.title }}"
+                                   src="{{ font.preview_image.url }}"
+                                   alt="{{ font.title }}"
                                    loading="lazy" decoding="async">
                             {% else %}
                               <div class="opt2-img opt2-img--placeholder" aria-hidden="true"></div>
@@ -271,9 +307,9 @@
                           </div>
 
                           <div class="opt2-body">
-                            <div class="opt2-title">{{ opt.news.title }}</div>
+                            <div class="opt2-title">{{ font.title }}</div>
                             <div class="opt2-sample js-font-sample"
-                                 style="font-family: {{ opt.css_value }};">
+                                 style="font-family: {{ font.font_family }};">
                               Выпускник 2026
                             </div>
                           </div>
@@ -281,7 +317,7 @@
                       </div>
                     {% empty %}
                       <div class="ribbon-strip__item">
-                        <div class="text-muted p-3">Нет шрифтов (cat_id=4).</div>
+                        <div class="text-muted p-3">Нет активных шрифтов.</div>
                       </div>
                     {% endfor %}
                   </div>
@@ -290,10 +326,11 @@
                 </div>
 
                 {% if form.font_family.errors %}<div class="text-danger mt-1">{{ form.font_family.errors }}</div>{% endif %}
+                {% if form.ribbon_font.errors %}<div class="text-danger mt-1">{{ form.ribbon_font.errors }}</div>{% endif %}
               </div>
 
               <div class="zl-constructor-step-heading zl-constructor-step-heading-spaced">
-                <span>Шаг 04</span>
+                <span>Шаг 05</span>
                 <div>
                   <h2>Количество</h2>
                   <p>
@@ -361,7 +398,7 @@
               <hr>
 
               <div class="zl-constructor-step-heading zl-constructor-step-heading-spaced">
-                <span>Шаг 05</span>
+                <span>Шаг 06</span>
                 <div>
                   <h2>Контактные данные</h2>
                   <p>
@@ -443,6 +480,10 @@
                 <div class="d-flex justify-content-between">
                   <span>Шрифт</span>
                   <span id="metaFont">—</span>
+                </div>
+                <div class="d-flex justify-content-between">
+                  <span>Шаблон</span>
+                  <span id="metaTemplate">—</span>
                 </div>
               </div>
 
@@ -535,6 +576,8 @@
 .opt-grid{ display:grid; gap:10px; }
 .opt-grid--mini{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
 @media (min-width: 576px){ .opt-grid--mini{ grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.opt-grid--templates{ grid-template-columns: repeat(1, minmax(0, 1fr)); }
+@media (min-width: 576px){ .opt-grid--templates{ grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 
 .opt-mini{
   width:100%;
@@ -669,9 +712,15 @@
   const textColorInput = document.querySelector('[name="text_color"]');
   const fontFamilyInput = document.querySelector('[name="font_family"]');
 
+  const ribbonColorInput = document.querySelector('[name="ribbon_color"]');
+  const ribbonTextColorInput = document.querySelector('[name="ribbon_text_color"]');
+  const ribbonFontInput = document.querySelector('[name="ribbon_font"]');
+  const ribbonTemplateInput = document.querySelector('[name="ribbon_template"]');
+
   const metaRibbonColor = document.getElementById('metaRibbonColor');
   const metaTextColor = document.getElementById('metaTextColor');
   const metaFont = document.getElementById('metaFont');
+  const metaTemplate = document.getElementById('metaTemplate');
 
   const debugEl = document.getElementById('ribbonDebug');
   function logLine(msg){
@@ -724,6 +773,7 @@
     const activeColor = document.querySelector('.js-color.is-active');
     const activeTextColor = document.querySelector('.js-textcolor.is-active');
     const activeFont = document.querySelector('.js-font.is-active');
+    const activeTemplate = document.querySelector('.js-template.is-active');
 
     if (metaRibbonColor) {
       metaRibbonColor.textContent = (
@@ -741,6 +791,12 @@
       metaFont.textContent = (
         activeFont && activeFont.dataset.label
       ) ? activeFont.dataset.label : 'Выберите шрифт';
+    }
+
+    if (metaTemplate) {
+      metaTemplate.textContent = (
+        activeTemplate && activeTemplate.dataset.label
+      ) ? activeTemplate.dataset.label : 'Выберите шаблон';
     }
   }
 
@@ -828,6 +884,9 @@
     const colorBtn = e.target.closest('.js-color');
     if(colorBtn){
       ribbonBgInput.value = colorBtn.dataset.color || '#1E4ED8';
+      if(ribbonColorInput){
+        ribbonColorInput.value = colorBtn.dataset.id || '';
+      }
       setActive(document.querySelectorAll('.js-color'), colorBtn);
       update();
       return;
@@ -836,6 +895,9 @@
     const tcBtn = e.target.closest('.js-textcolor');
     if(tcBtn){
       textColorInput.value = tcBtn.dataset.color || '#FFFFFF';
+      if(ribbonTextColorInput){
+        ribbonTextColorInput.value = tcBtn.dataset.id || '';
+      }
       setActive(document.querySelectorAll('.js-textcolor'), tcBtn);
       update();
       return;
@@ -844,8 +906,21 @@
     const fontBtn = e.target.closest('.js-font');
     if(fontBtn){
       fontFamilyInput.value = fontBtn.dataset.font || "'Montserrat', sans-serif";
+      if(ribbonFontInput){
+        ribbonFontInput.value = fontBtn.dataset.id || '';
+      }
       ensureFontLink(fontBtn.dataset.fontUrl);
       setActive(document.querySelectorAll('.js-font'), fontBtn);
+      update();
+      return;
+    }
+
+    const templateBtn = e.target.closest('.js-template');
+    if(templateBtn){
+      if(ribbonTemplateInput){
+        ribbonTemplateInput.value = templateBtn.dataset.id || '';
+      }
+      setActive(document.querySelectorAll('.js-template'), templateBtn);
       update();
       return;
     }
@@ -898,18 +973,50 @@
   updatePersonsStatus(false);
 
   const colorBtns = [...document.querySelectorAll('.js-color')];
-  const initColor = colorBtns.find(b => (b.dataset.color || '').toLowerCase() === (ribbonBgInput.value || '').toLowerCase());
-  if(initColor) setActive(colorBtns, initColor);
+  const initColor = (
+    colorBtns.find(b => ribbonColorInput && (b.dataset.id || '') === (ribbonColorInput.value || ''))
+    || colorBtns.find(b => (b.dataset.color || '').toLowerCase() === (ribbonBgInput.value || '').toLowerCase())
+    || colorBtns[0]
+  );
+  if(initColor){
+    if(ribbonColorInput) ribbonColorInput.value = initColor.dataset.id || '';
+    ribbonBgInput.value = initColor.dataset.color || ribbonBgInput.value;
+    setActive(colorBtns, initColor);
+  }
 
   const textBtns = [...document.querySelectorAll('.js-textcolor')];
-  const initText = textBtns.find(b => (b.dataset.color || '').toLowerCase() === (textColorInput.value || '').toLowerCase());
-  if(initText) setActive(textBtns, initText);
+  const initText = (
+    textBtns.find(b => ribbonTextColorInput && (b.dataset.id || '') === (ribbonTextColorInput.value || ''))
+    || textBtns.find(b => (b.dataset.color || '').toLowerCase() === (textColorInput.value || '').toLowerCase())
+    || textBtns[0]
+  );
+  if(initText){
+    if(ribbonTextColorInput) ribbonTextColorInput.value = initText.dataset.id || '';
+    textColorInput.value = initText.dataset.color || textColorInput.value;
+    setActive(textBtns, initText);
+  }
 
   const fontBtns = [...document.querySelectorAll('.js-font')];
-  const initFont = fontBtns.find(b => (b.dataset.font || '') === (fontFamilyInput.value || ''));
+  const initFont = (
+    fontBtns.find(b => ribbonFontInput && (b.dataset.id || '') === (ribbonFontInput.value || ''))
+    || fontBtns.find(b => (b.dataset.font || '') === (fontFamilyInput.value || ''))
+    || fontBtns[0]
+  );
   if(initFont){
+    if(ribbonFontInput) ribbonFontInput.value = initFont.dataset.id || '';
+    fontFamilyInput.value = initFont.dataset.font || fontFamilyInput.value;
     ensureFontLink(initFont.dataset.fontUrl);
     setActive(fontBtns, initFont);
+  }
+
+  const templateBtns = [...document.querySelectorAll('.js-template')];
+  const initTemplate = (
+    templateBtns.find(b => ribbonTemplateInput && (b.dataset.id || '') === (ribbonTemplateInput.value || ''))
+    || templateBtns[0]
+  );
+  if(initTemplate){
+    if(ribbonTemplateInput) ribbonTemplateInput.value = initTemplate.dataset.id || '';
+    setActive(templateBtns, initTemplate);
   }
 
   update();

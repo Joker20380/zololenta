@@ -25,6 +25,7 @@ from .models import (
     RibbonOrderReview,
     RibbonOption,
     Subscriber,)
+from .models import RibbonColor, RibbonTextColor, RibbonFont, RibbonTemplate
 from .utils import DataMixin
 
 
@@ -104,17 +105,27 @@ class RibbonConstructorView(TemplateView):
         ctx["form"] = kwargs.get("form") or RibbonOrderForm()
 
         ctx["ribbon_colors"] = (
-            RibbonOption.objects
-            .filter(opt_type=RibbonOption.TYPE_COLOR, is_active=True, news__cat_id=3)
-            .select_related("news")
-            .order_by("-news__time_update")
+            RibbonColor.objects
+            .filter(is_active=True)
+            .order_by("sort_order", "title")
+        )
+
+        ctx["ribbon_text_colors"] = (
+            RibbonTextColor.objects
+            .filter(is_active=True)
+            .order_by("sort_order", "title")
         )
 
         ctx["ribbon_fonts"] = (
-            RibbonOption.objects
-            .filter(opt_type=RibbonOption.TYPE_FONT, is_active=True, news__cat_id=4)
-            .select_related("news")
-            .order_by("-news__time_update")
+            RibbonFont.objects
+            .filter(is_active=True)
+            .order_by("sort_order", "title")
+        )
+
+        ctx["ribbon_templates"] = (
+            RibbonTemplate.objects
+            .filter(is_active=True)
+            .order_by("sort_order", "title")
         )
 
         return ctx

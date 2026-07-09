@@ -15,7 +15,12 @@ from .models import (
     RibbonOrderReview,
     RibbonOption,
     Contact,
-    ContactRequest,)
+    ContactRequest,
+    RibbonColor,
+    RibbonTextColor,
+    RibbonFont,
+    RibbonTemplate,
+)
 
 
 # ============================================================
@@ -283,18 +288,37 @@ class RibbonOrderReviewForm(forms.ModelForm):
 
 class RibbonOrderForm(forms.ModelForm):
     """
-    Важно:
-    - ribbon_bg и font_family приходят скрытыми полями из UI-каталога.
-    - Валидируем строго по RibbonOption, привязанным к News нужной категории.
+    Чистая форма заказа ленты.
+
+    Новые FK-поля:
+    - ribbon_color
+    - ribbon_text_color
+    - ribbon_font
+    - ribbon_template
+
+    Snapshot-поля сохраняем:
+    - ribbon_bg
+    - text_color
+    - font_family
+
+    Это нужно для совместимости со старой админкой, Telegram-сообщениями
+    и уже созданными заказами.
     """
 
     class Meta:
         model = RibbonOrder
         fields = [
             "text",
+
+            "ribbon_color",
+            "ribbon_text_color",
+            "ribbon_font",
+            "ribbon_template",
+
             "ribbon_bg",
             "font_family",
             "text_color",
+
             "is_group_order",
             "persons_count",
             "persons_list",
@@ -305,6 +329,11 @@ class RibbonOrderForm(forms.ModelForm):
         ]
         widgets = {
             "text": forms.TextInput(attrs={"class": "form-control"}),
+
+            "ribbon_color": forms.HiddenInput(),
+            "ribbon_text_color": forms.HiddenInput(),
+            "ribbon_font": forms.HiddenInput(),
+            "ribbon_template": forms.HiddenInput(),
 
             "ribbon_bg": forms.HiddenInput(),
             "font_family": forms.HiddenInput(),
@@ -319,9 +348,51 @@ class RibbonOrderForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields["ribbon_bg"].initial = "#E9E5D3"
-        self.fields["text_color"].initial = "#FFFFFF"
-        self.fields["font_family"].initial = "'Romantique Script', cursive"
+
+        colors = RibbonColor.objects.filter(is_active=True).order_by("sort_order", "title")
+        text_colors = RibbonTextColor.objects.filter(is_active=True).order_by("sort_order", "title")
+        fonts = RibbonFont.objects.filter(is_active=True).order_by("sort_order", "title")
+        templates = RibbonTemplate.objects.filter(is_active=True).order_by("sort_order", "title")
+
+        self.fields["ribbon_color"].queryset = colors
+        self.fields["ribbon_text_color"].queryset = text_colors
+        self.fields["ribbon_font"].queryset = fonts
+        self.fields["ribbon_template"].queryset = templates
+
+        for field_name in [
+            "ribbon_color",
+            "ribbon_text_color",
+            "ribbon_font",
+            "ribbon_template",
+        ]:
+            self.fields[field_name].required = True
+
+        self.fields["persons_count"].required = False
+        self.fields["persons_list"].required = False
+
+        if not self.is_bound:
+            default_color = colors.first()
+            default_text_color = (
+                text_colors.filter(slug="text-white").first()
+                or text_colors.first()
+            )
+            default_font = fonts.first()
+            default_template = templates.first()
+
+            if default_color:
+                self.fields["ribbon_color"].initial = default_color.pk
+                self.fields["ribbon_bg"].initial = default_color.hex_value
+
+            if default_text_color:
+                self.fields["ribbon_text_color"].initial = default_text_color.pk
+                self.fields["text_color"].initial = default_text_color.hex_value
+
+            if default_font:
+                self.fields["ribbon_font"].initial = default_font.pk
+                self.fields["font_family"].initial = default_font.font_family
+
+            if default_template:
+                self.fields["ribbon_template"].initial = default_template.pk
 
         self.fields["text"].widget.attrs.update({
             "placeholder": "Например: Выпускник 2026 · 11-А класс",
@@ -358,31 +429,43 @@ class RibbonOrderForm(forms.ModelForm):
             raise forms.ValidationError("Некорректный цвет текста.")
         return v.upper()
 
-    def _active_option_exists(self, opt_type: str, *, cat_id: int, value: str) -> bool:
-        return RibbonOption.objects.filter(
-            opt_type=opt_type,
-            is_active=True,
-            news__cat_id=cat_id,
-            css_value__iexact=value,
-        ).exists()
-
     def clean_ribbon_bg(self):
         v = (self.cleaned_data.get("ribbon_bg") or "").strip() or "#E9E5D3"
         if not self._is_hex(v):
             raise forms.ValidationError("Некорректный цвет ленты.")
-
-        if not self._active_option_exists(RibbonOption.TYPE_COLOR, cat_id=3, value=v):
-            raise forms.ValidationError("Выберите цвет ленты из каталога.")
         return v.upper()
 
     def clean_font_family(self):
-        v = (self.cleaned_data.get("font_family") or "").strip() or "'Romantique Script', cursive"
-        if not self._active_option_exists(RibbonOption.TYPE_FONT, cat_id=4, value=v):
+        v = (self.cleaned_data.get("font_family") or "").strip()
+        if not v:
             raise forms.ValidationError("Выберите шрифт из каталога.")
         return v
 
     def clean(self):
         cleaned = super().clean()
+
+        ribbon_color = cleaned.get("ribbon_color")
+        ribbon_text_color = cleaned.get("ribbon_text_color")
+        ribbon_font = cleaned.get("ribbon_font")
+        ribbon_template = cleaned.get("ribbon_template")
+
+        if ribbon_color:
+            cleaned["ribbon_bg"] = ribbon_color.hex_value.upper()
+        else:
+            self.add_error("ribbon_color", "Выберите цвет ленты из каталога.")
+
+        if ribbon_text_color:
+            cleaned["text_color"] = ribbon_text_color.hex_value.upper()
+        else:
+            self.add_error("ribbon_text_color", "Выберите цвет текста из каталога.")
+
+        if ribbon_font:
+            cleaned["font_family"] = ribbon_font.font_family
+        else:
+            self.add_error("ribbon_font", "Выберите шрифт из каталога.")
+
+        if not ribbon_template:
+            self.add_error("ribbon_template", "Выберите шаблон ленты.")
 
         phone = (cleaned.get("phone") or "").strip()
         email = (cleaned.get("email") or "").strip().lower()
@@ -401,8 +484,38 @@ class RibbonOrderForm(forms.ModelForm):
 
             if not (cleaned.get("persons_list") or "").strip():
                 self.add_error("persons_list", "Добавьте список ФИО.")
+        else:
+            cleaned["persons_count"] = 0
+            cleaned["persons_list"] = ""
 
         return cleaned
+
+    def save(self, commit=True):
+        order = super().save(commit=False)
+
+        if self.cleaned_data.get("ribbon_color"):
+            order.ribbon_color = self.cleaned_data["ribbon_color"]
+            order.ribbon_bg = order.ribbon_color.hex_value.upper()
+
+        if self.cleaned_data.get("ribbon_text_color"):
+            order.ribbon_text_color = self.cleaned_data["ribbon_text_color"]
+            order.text_color = order.ribbon_text_color.hex_value.upper()
+
+        if self.cleaned_data.get("ribbon_font"):
+            order.ribbon_font = self.cleaned_data["ribbon_font"]
+            order.font_family = order.ribbon_font.font_family
+
+        if self.cleaned_data.get("ribbon_template"):
+            order.ribbon_template = self.cleaned_data["ribbon_template"]
+
+        if not order.is_group_order:
+            order.persons_count = 0
+            order.persons_list = ""
+
+        if commit:
+            order.save()
+
+        return order
 
 
 # ============================================================
