@@ -111,29 +111,40 @@ def _safe_hex(v: str, default: str) -> str:
     return default.upper()
 
 
-def _human_color_value(title: str, hexv: str) -> str:
+def _human_color_value(title: str, hexv: str = "") -> str:
+    """
+    Telegram is a business-facing channel.
+
+    Store HEX in the order for technical snapshots, but show only
+    human-readable catalog names in manager notifications.
+    """
     title = (title or "").strip()
-    hexv = _safe_hex(hexv, hexv or "#000000")
-
-    if title:
-        return f"{title} · {hexv}"
-
-    return hexv
+    return title or "Не указан"
 
 
 def _catalog_color_label(hexv: str) -> str:
     """
-    Resolve ribbon color HEX through the active constructor catalog.
+    Resolve ribbon color HEX through the clean RibbonColor catalog first.
 
-    Orders store only HEX in ribbon_bg. Telegram needs a business label,
-    so we map HEX back to RibbonOption -> News.title.
+    Fallback to legacy RibbonOption only for old orders.
+    Never expose HEX in Telegram.
     """
     hexv = _safe_hex(hexv, "#E9E5D3")
 
     try:
-        from main.models import RibbonOption
+        from main.models import RibbonColor, RibbonOption
     except Exception:
-        return hexv
+        return "Не указан"
+
+    color = (
+        RibbonColor.objects
+        .filter(is_active=True, hex_value__iexact=hexv)
+        .order_by("sort_order", "title")
+        .first()
+    )
+
+    if color:
+        return _human_color_value(color.title)
 
     option = (
         RibbonOption.objects
@@ -149,52 +160,70 @@ def _catalog_color_label(hexv: str) -> str:
     )
 
     if option and option.news_id:
-        return _human_color_value(option.news.title, option.css_value)
+        return _human_color_value(option.news.title)
 
-    return hexv
+    return "Не указан"
 
 
 TEXT_COLOR_LABELS = {
     "#FFFFFF": "Белый",
     "#111827": "Чёрный",
+    "#000000": "Чёрный",
     "#FFD36A": "Золото",
+    "#D4AF37": "Золото",
     "#D1D5DB": "Серебро",
+    "#C0C0C0": "Серебро",
+    "#7A1430": "Бордовый",
 }
 
 
 def _order_ribbon_color_label(order) -> str:
+    color = getattr(order, "ribbon_color", None)
+    if color and getattr(color, "title", ""):
+        return _human_color_value(color.title)
+
     hexv = _safe_hex(getattr(order, "ribbon_bg", ""), "#E9E5D3")
 
     catalog_label = _catalog_color_label(hexv)
-    if catalog_label != hexv:
+    if catalog_label != "Не указан":
         return catalog_label
 
     color_obj = getattr(order, "color_news", None)
     if color_obj is not None:
         title = getattr(color_obj, "title", None)
         if title:
-            return _human_color_value(title, hexv)
+            return _human_color_value(title)
 
-    return hexv
+    return "Не указан"
 
 
 def _text_color_label(hexv: str) -> str:
     hexv = _safe_hex(hexv, "#FFFFFF")
-    return _human_color_value(TEXT_COLOR_LABELS.get(hexv, ""), hexv)
+    return _human_color_value(TEXT_COLOR_LABELS.get(hexv, ""))
+
+
+def _order_text_color_label(order) -> str:
+    color = getattr(order, "ribbon_text_color", None)
+    if color and getattr(color, "title", ""):
+        return _human_color_value(color.title)
+
+    return _text_color_label(getattr(order, "text_color", ""))
 
 
 def _order_font_label(order) -> str:
-    ff = (getattr(order, "font_family", "") or "").strip()
+    font = getattr(order, "ribbon_font", None)
+    if font and getattr(font, "title", ""):
+        return font.title
 
     font_obj = getattr(order, "font_news", None)
     legacy_title = getattr(font_obj, "title", None) if font_obj is not None else None
-
-    if ff and legacy_title:
-        return f"{legacy_title} ({ff})"
-    if ff:
-        return ff
     if legacy_title:
         return legacy_title
+
+    ff = (getattr(order, "font_family", "") or "").strip()
+    if ff:
+        return ff.replace("'", "").replace('"', "").split(",")[0].strip() or "—"
+
     return "—"
 
 
@@ -228,7 +257,7 @@ def format_order(order) -> str:
 
     ribbon_color = _order_ribbon_color_label(order)
     font_label = _order_font_label(order)
-    text_color = _text_color_label(getattr(order, "text_color", ""))
+    text_color = _order_text_color_label(order)
     review_url = _order_review_url(order)
 
     return (

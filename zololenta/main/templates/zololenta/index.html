@@ -4,7 +4,18 @@
 {% block description %}Именные выпускные ленты для школ, колледжей и вузов. Выбор цвета, шрифта и персонального текста с согласованием макета перед печатью.{% endblock %}
 {% block title %}Именные выпускные ленты — Золотая лента{% endblock %}
 
+{% block extra_css %}
+  {{ block.super }}
+  <link rel="stylesheet" href="{% static 'zololenta/css/home.css' %}">
+{% endblock %}
+
+{% block extra_js %}
+  {{ block.super }}
+  <script src="{% static 'zololenta/js/home.js' %}" defer></script>
+{% endblock %}
+
 {% block content %}
+
 
 
 
@@ -384,46 +395,6 @@
 
 
     
-<style>
-  .zl-home-choice-color-preview {
-    position: relative;
-    display: flex;
-    align-items: flex-end;
-    justify-content: center;
-    width: 100%;
-    min-height: 260px;
-    border-radius: 22px;
-    overflow: hidden;
-    box-shadow:
-      inset 0 0 0 1px rgba(255, 255, 255, 0.42),
-      inset 0 28px 60px rgba(255, 255, 255, 0.22),
-      inset 0 -34px 70px rgba(0, 0, 0, 0.12);
-  }
-
-  .zl-home-choice-color-preview::before {
-    content: "";
-    position: absolute;
-    inset: 18px;
-    border-radius: 18px;
-    border: 1px solid rgba(255, 255, 255, 0.42);
-    pointer-events: none;
-  }
-
-  .zl-home-choice-color-preview__label {
-    position: relative;
-    z-index: 1;
-    margin: 0 18px 20px;
-    padding: 9px 16px;
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.82);
-    color: #7A1430;
-    font-size: 14px;
-    font-weight: 600;
-    line-height: 1.2;
-    text-align: center;
-    box-shadow: 0 10px 28px rgba(122, 20, 48, 0.14);
-  }
-</style>
 
 <div class="product-slider owl-carousel zl-home-choice-slider zl-home-ribbon-color-carousel">
 
@@ -1073,87 +1044,12 @@
 </section>
 
 
-<style></style>
-
-<script>
-(function(){
-  function initHomeCarousel(selector, options){
-    if(!window.jQuery || !jQuery.fn || !jQuery.fn.owlCarousel){
-      return;
-    }
-
-    const $items = jQuery(selector);
-    if(!$items.length){
-      return;
-    }
-
-    $items.owlCarousel(Object.assign({
-      loop:false,
-      margin:24,
-      nav:true,
-      dots:false,
-      autoplay:false,
-      responsive:{
-        0:{ items:1 },
-        576:{ items:2 },
-        992:{ items:3 }
-      }
-    }, options || {}));
-  }
-
-  // Новые блоки главной работают как CSS-scroll strip.
-  // Owl здесь не используем, чтобы карточки не скрывались при сбое JS.
-})();
-</script>
 
 
 
 
 
-<style id="zl-home-existing-carousel-fix">
-.zl-home-product-card{
-  height:100%;
-}
 
-.zl-home-product-card .img-prod{
-  height:220px;
-  background:#f6f4f0;
-  overflow:hidden;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
 
-.zl-home-product-card--color .img-prod{
-  height:170px;
-}
-
-.zl-home-product-card .img-prod img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  display:block;
-}
-
-.zl-home-product-card__fallback{
-  width:100%;
-  height:100%;
-}
-
-.zl-home-product-card__swatch{
-  width:22px;
-  height:22px;
-  border-radius:8px;
-  display:inline-block;
-  box-shadow:inset 0 0 0 1px rgba(0,0,0,.16);
-  flex:0 0 22px;
-}
-
-.zl-home-product-card .text h3{
-  font-size:16px;
-  line-height:1.25;
-  margin-bottom:4px;
-}
-</style>
 
 {% endblock %}

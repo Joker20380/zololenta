@@ -1,124 +1,130 @@
 {% extends 'zololenta/base.html' %}
 {% load static %}
 
+{% block title %}Политика конфиденциальности — Золотая лента{% endblock %}
+{% block description %}Политика обработки персональных данных и конфиденциальности сайта Золотая лента.{% endblock %}
 
-{% block description %}Страница конфиденциальности информации{% endblock %}
+{% block extra_css %}
+  {{ block.super }}
+  <link rel="stylesheet" href="{% static 'zololenta/css/legal.css' %}">
+{% endblock %}
 
-{% block title %}Конфиденциальность информации{% endblock %}
+{% block extra_js %}
+  {{ block.super }}
+  <script src="{% static 'zololenta/js/legal.js' %}" defer></script>
+{% endblock %}
 
 {% block content %}
-	{% for n in view.news_all_conf %}
+<section class="zl-legal-page">
+  <div class="container">
+    <div class="zl-legal-shell">
 
-	<div class="hero-wrap hero-bread" style="background-image: url('{% static 'images/bg_6.jpg' %}');">
-      <div class="container">
-        <div class="row no-gutters slider-text align-items-center justify-content-center">
-          <div class="col-md-9 ftco-animate text-center">
-            <h1 class="mb-0 bread">{{ n.title }}</h1>
-            <p class="breadcrumbs"><span class="mr-2"><a href="index.html">Домой</a></span> <span class="mr-2"><a href="index.html">документы</a></span> <span>{{ n.title }}</span></p>
+      <article class="zl-legal-card">
+
+        <header class="zl-legal-header">
+          <span class="zl-legal-overline">Документы</span>
+
+          <h1 class="zl-legal-title">
+            Политика конфиденциальности
+          </h1>
+
+          <p class="zl-legal-lead">
+            На этой странице описано, какие данные могут обрабатываться
+            при использовании сайта и оформлении заявки на изготовление лент.
+          </p>
+        </header>
+
+        <div class="zl-legal-content">
+
+          <h2>1. Общие положения</h2>
+
+          <p>
+            Настоящая политика описывает порядок обработки персональных данных
+            пользователей сайта «Золотая лента».
+          </p>
+
+          <p>
+            Используя сайт, отправляя заявку, подписываясь на рассылку
+            или связываясь с нами через формы обратной связи, пользователь
+            подтверждает согласие с условиями обработки данных.
+          </p>
+
+          <h2>2. Какие данные могут обрабатываться</h2>
+
+          <p>
+            Мы можем обрабатывать данные, которые пользователь самостоятельно
+            указывает в формах сайта:
+          </p>
+
+          <ul>
+            <li>имя или контактное лицо;</li>
+            <li>телефон;</li>
+            <li>email;</li>
+            <li>текст заявки или комментария;</li>
+            <li>параметры выбранной ленты: цвет, шрифт, текст, шаблон;</li>
+            <li>данные, необходимые для согласования и выполнения заказа.</li>
+          </ul>
+
+          <h2>3. Цели обработки данных</h2>
+
+          <p>
+            Персональные данные используются для обработки заявок, связи
+            с клиентом, согласования макета, выполнения заказа, отправки
+            уведомлений и ведения внутреннего учёта обращений.
+          </p>
+
+          <h2>4. Рассылка</h2>
+
+          <p>
+            Пользователь может подписаться на email-рассылку и в любой момент
+            отказаться от неё через страницу отписки.
+          </p>
+
+          <p>
+            Отписка от рассылки не удаляет историю заказов и служебные сообщения,
+            связанные с выполнением заявок.
+          </p>
+
+          <h2>5. Передача данных третьим лицам</h2>
+
+          <p>
+            Данные не передаются третьим лицам без необходимости, за исключением
+            случаев, связанных с исполнением заказа, требованиями закона
+            или технической работой сайта.
+          </p>
+
+          <h2>6. Защита данных</h2>
+
+          <p>
+            Мы применяем разумные организационные и технические меры для защиты
+            данных от несанкционированного доступа, изменения или удаления.
+          </p>
+
+          <h2>7. Обратная связь</h2>
+
+          <p>
+            По вопросам обработки персональных данных можно связаться с нами
+            через страницу контактов.
+          </p>
+
+          <div class="zl-legal-actions">
+            <a href="{% url 'contacts' %}" class="zl-legal-button">
+              Связаться с нами
+            </a>
+
+            <a href="{% url 'index' %}" class="zl-legal-link">
+              Вернуться на главную
+            </a>
           </div>
+
+          <p class="zl-legal-meta">
+            Последнее обновление: {% now "d.m.Y" %}
+          </p>
+
         </div>
-      </div>
+      </article>
+
     </div>
-
-    <section class="ftco-section ftco-degree-bg">
-      <div class="container">
-        <div class="row">
-        
-          <div class="col-lg-8 ftco-animate">
-            <h2 class="mb-3"></h2>
-           	
-          	{% if n.photo %}
-          	<p><img src="{{ n.photo.url }}" alt="{{ n.title }}" class="img-fluid"></p>
-          	{% else %}
-            <p><img src="{% static 'images/no_photo.webp' %}" alt="нет фото" class="img-fluid"></p>
-            {% endif %}
-
-            <p>{% autoescape off %}{{ n.content }}{% endautoescape %}</p>
-
-
-          </div>
-          <!-- .col-md-8 -->
-          <div class="col-lg-4 sidebar ftco-animate">
-            <div class="sidebar-box">
-              <form action="#" class="search-form">
-                <div class="form-group">
-                  <span class="icon fa fa-search"></span>
-                  <input type="text" class="form-control" placeholder="Type a keyword and hit enter">
-                </div>
-              </form>
-            </div>
-            <div class="sidebar-box ftco-animate">
-              <div class="categories">
-                <h3>Categories</h3>
-                <li><a href="#">Bags <span>(12)</span></a></li>
-                <li><a href="#">Shoes <span>(22)</span></a></li>
-                <li><a href="#">Dress <span>(37)</span></a></li>
-                <li><a href="#">Accessories <span>(42)</span></a></li>
-                <li><a href="#">Makeup <span>(14)</span></a></li>
-                <li><a href="#">Beauty <span>(140)</span></a></li>
-              </div>
-            </div>
-
-            <div class="sidebar-box ftco-animate">
-              <h3>Recent Blog</h3>
-              <div class="block-21 mb-4 d-flex">
-                <a class="blog-img mr-4" style="background-image: url({% static 'images/image_1.jpg' %});"></a>
-                <div class="text">
-                  <h3 class="heading"><a href="#">Even the all-powerful Pointing has no control about the blind texts</a></h3>
-                  <div class="meta">
-                    <div><a href="#"><span class="icon-calendar"></span> July 12, 2018</a></div>
-                    <div><a href="#"><span class="icon-person"></span> Admin</a></div>
-                    <div><a href="#"><span class="icon-chat"></span> 19</a></div>
-                  </div>
-                </div>
-              </div>
-              <div class="block-21 mb-4 d-flex">
-                <a class="blog-img mr-4" style="background-image: url({% static 'images/image_2.jpg' %});"></a>
-                <div class="text">
-                  <h3 class="heading"><a href="#">Even the all-powerful Pointing has no control about the blind texts</a></h3>
-                  <div class="meta">
-                    <div><a href="#"><span class="icon-calendar"></span> July 12, 2018</a></div>
-                    <div><a href="#"><span class="icon-person"></span> Admin</a></div>
-                    <div><a href="#"><span class="icon-chat"></span> 19</a></div>
-                  </div>
-                </div>
-              </div>
-              <div class="block-21 mb-4 d-flex">
-                <a class="blog-img mr-4" style="background-image: url({% static 'images/image_3.jpg' %});"></a>
-                <div class="text">
-                  <h3 class="heading"><a href="#">Even the all-powerful Pointing has no control about the blind texts</a></h3>
-                  <div class="meta">
-                    <div><a href="#"><span class="icon-calendar"></span> July 12, 2018</a></div>
-                    <div><a href="#"><span class="icon-person"></span> Admin</a></div>
-                    <div><a href="#"><span class="icon-chat"></span> 19</a></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="sidebar-box ftco-animate">
-              <h3>Tag Cloud</h3>
-              <div class="tagcloud">
-                <a href="#" class="tag-cloud-link">dish</a>
-                <a href="#" class="tag-cloud-link">menu</a>
-                <a href="#" class="tag-cloud-link">food</a>
-                <a href="#" class="tag-cloud-link">sweet</a>
-                <a href="#" class="tag-cloud-link">tasty</a>
-                <a href="#" class="tag-cloud-link">delicious</a>
-                <a href="#" class="tag-cloud-link">desserts</a>
-                <a href="#" class="tag-cloud-link">drinks</a>
-              </div>
-            </div>
-
-            <div class="sidebar-box ftco-animate">
-              <h3>Paragraph</h3>
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ducimus itaque, autem necessitatibus voluptate quod mollitia delectus aut, sunt placeat nam vero culpa sapiente consectetur similique, inventore eos fugit cupiditate numquam!</p>
-            </div>
-          </div>
-			
-        </div>
-      </div>
-    </section> <!-- .section -->
-
-{% endfor %}
+  </div>
+</section>
 {% endblock %}

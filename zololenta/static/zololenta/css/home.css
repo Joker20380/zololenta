@@ -1,0 +1,361 @@
+/* ============================================================
+   Zololenta Home Page
+   Scoped page design system
+   ============================================================ */
+
+:root{
+  --zl-home-bg: #faf7f1;
+  --zl-home-surface: #ffffff;
+  --zl-home-text: #171717;
+  --zl-home-muted: #77716b;
+  --zl-home-border: rgba(122, 20, 48, .10);
+  --zl-home-accent: #7A1430;
+  --zl-home-gold: #caa45d;
+  --zl-home-radius: 22px;
+  --zl-home-shadow: 0 18px 44px rgba(70, 35, 20, .08);
+}
+
+/* Section rhythm */
+.zl-home-examples,
+.zl-home-process,
+.zl-home-choice-section,
+.zl-home-package,
+.zl-home-stories,
+.zl-home-faq,
+.zl-home-templates-section,
+.zl-home-reviews-section{
+  position: relative;
+  padding: 86px 0;
+}
+
+.zl-home-examples,
+.zl-home-choice-section,
+.zl-home-stories,
+.zl-home-templates-section{
+  background: var(--zl-home-surface);
+}
+
+.zl-home-process,
+.zl-home-package,
+.zl-home-faq,
+.zl-home-reviews-section{
+  background: var(--zl-home-bg);
+}
+
+/* Unified section headers */
+.zl-home-section-header,
+.zl-home-process-header,
+.zl-home-choice-header,
+.zl-home-package-header,
+.zl-home-stories-header{
+  margin-bottom: 34px;
+}
+
+.zl-home-templates-section .heading-section,
+.zl-home-reviews-section .heading-section{
+  max-width: 780px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.zl-home-section-overline,
+.zl-home-templates-section .subheading,
+.zl-home-reviews-section .subheading{
+  display: inline-block;
+  margin-bottom: 10px;
+  color: var(--zl-home-gold);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+}
+
+.zl-home-section-header h2,
+.zl-home-process-header h2,
+.zl-home-choice-header h2,
+.zl-home-package-header h2,
+.zl-home-stories-header h2,
+.zl-home-faq h2,
+.zl-home-templates-section h2,
+.zl-home-reviews-section h2{
+  color: var(--zl-home-text);
+  font-size: clamp(30px, 4vw, 48px);
+  font-weight: 500;
+  line-height: 1.12;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.zl-home-section-header h2 span,
+.zl-home-process-header h2 span,
+.zl-home-choice-header h2 span,
+.zl-home-package-header h2 span,
+.zl-home-stories-header h2 span,
+.zl-home-faq h2 span{
+  display: block;
+}
+
+.zl-home-section-intro p,
+.zl-home-choice-copy p,
+.zl-home-package-header p,
+.zl-home-stories-intro p,
+.zl-home-faq-intro p,
+.zl-home-templates-section .heading-section p,
+.zl-home-reviews-section .heading-section p{
+  color: var(--zl-home-muted);
+  font-size: 15px;
+  line-height: 1.75;
+}
+
+/* Existing Owl carousel baseline */
+.zl-home-examples-slider .owl-stage,
+.zl-home-choice-slider .owl-stage,
+.zl-home-package-slider .owl-stage,
+.zl-home-template-carousel .owl-stage,
+.zl-home-review-carousel .owl-stage{
+  display: flex;
+}
+
+.zl-home-examples-slider .owl-item,
+.zl-home-choice-slider .owl-item,
+.zl-home-package-slider .owl-item,
+.zl-home-template-carousel .owl-item,
+.zl-home-review-carousel .owl-item{
+  display: flex;
+}
+
+.zl-home-examples-slider .item,
+.zl-home-choice-slider .item,
+.zl-home-package-slider .item,
+.zl-home-template-carousel .item,
+.zl-home-review-carousel .item{
+  display: flex;
+  width: 100%;
+  height: 100%;
+  padding: 8px 4px 24px;
+}
+
+/* Unified cards for newly migrated catalog blocks */
+.zl-home-product-card{
+  width: 100%;
+  height: 100%;
+  background: var(--zl-home-surface);
+  border: 1px solid var(--zl-home-border);
+  border-radius: var(--zl-home-radius);
+  overflow: hidden;
+  box-shadow: var(--zl-home-shadow);
+  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+}
+
+.zl-home-product-card:hover{
+  transform: translateY(-3px);
+  border-color: rgba(122, 20, 48, .18);
+  box-shadow: 0 22px 56px rgba(70, 35, 20, .12);
+}
+
+.zl-home-product-card .img-prod{
+  height: 220px;
+  background: #f3eee6;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.zl-home-product-card--color .img-prod{
+  height: 170px;
+}
+
+.zl-home-product-card--review .img-prod{
+  height: 180px;
+}
+
+.zl-home-product-card .img-prod img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.zl-home-product-card__fallback{
+  width: 100%;
+  height: 100%;
+}
+
+.zl-home-product-card .text{
+  min-height: 106px;
+}
+
+.zl-home-product-card .text h3{
+  color: var(--zl-home-text);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.25;
+  margin-bottom: 4px;
+}
+
+.zl-home-product-card .text p{
+  color: var(--zl-home-muted);
+  line-height: 1.55;
+}
+
+.zl-home-product-card__swatch{
+  width: 22px;
+  height: 22px;
+  border-radius: 8px;
+  display: inline-block;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,.16);
+  flex: 0 0 22px;
+}
+
+/* Keep old color preview styles available only if old markup remains */
+.zl-home-choice-color-preview{
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  width: 100%;
+  min-height: 260px;
+  border-radius: 22px;
+  overflow: hidden;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, .42),
+    inset 0 28px 60px rgba(255, 255, 255, .22),
+    inset 0 -34px 70px rgba(0, 0, 0, .12);
+}
+
+.zl-home-choice-color-preview::before{
+  content: "";
+  position: absolute;
+  inset: 18px;
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,.42);
+  pointer-events: none;
+}
+
+.zl-home-choice-color-preview__label{
+  position: relative;
+  z-index: 1;
+  margin: 0 18px 20px;
+  padding: 9px 16px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.82);
+  color: var(--zl-home-accent);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.2;
+  text-align: center;
+  box-shadow: 0 10px 28px rgba(122,20,48,.14);
+}
+
+/* Reviews fallback */
+.zl-home-reviews-section .text-muted{
+  color: var(--zl-home-muted) !important;
+}
+
+/* Mobile */
+@media (max-width: 767.98px){
+  .zl-home-examples,
+  .zl-home-process,
+  .zl-home-choice-section,
+  .zl-home-package,
+  .zl-home-stories,
+  .zl-home-faq,
+  .zl-home-templates-section,
+  .zl-home-reviews-section{
+    padding: 58px 0;
+  }
+
+  .zl-home-section-header h2,
+  .zl-home-process-header h2,
+  .zl-home-choice-header h2,
+  .zl-home-package-header h2,
+  .zl-home-stories-header h2,
+  .zl-home-faq h2,
+  .zl-home-templates-section h2,
+  .zl-home-reviews-section h2{
+    font-size: 28px;
+    letter-spacing: .06em;
+  }
+
+  .zl-home-product-card .img-prod{
+    height: 190px;
+  }
+
+  .zl-home-product-card--color .img-prod{
+    height: 145px;
+  }
+}
+
+
+/* === HOME PROCESS CONTRAST FIX === */
+.zl-home-process{
+  background:
+    radial-gradient(circle at 20% 0%, rgba(202, 164, 93, .10), transparent 34%),
+    linear-gradient(180deg, #fbf8f2 0%, #fffdf9 100%);
+  color: var(--zl-home-text);
+}
+
+.zl-home-process .zl-home-section-overline{
+  color: var(--zl-home-gold);
+}
+
+.zl-home-process-header h2,
+.zl-home-process-header h2 span{
+  color: var(--zl-home-text);
+}
+
+.zl-home-process-header p{
+  color: var(--zl-home-muted);
+}
+
+.zl-home-process-card{
+  background: rgba(255, 255, 255, .82);
+  border: 1px solid var(--zl-home-border);
+  border-radius: var(--zl-home-radius);
+  box-shadow: var(--zl-home-shadow);
+}
+
+.zl-home-process-number{
+  color: var(--zl-home-gold);
+}
+
+.zl-home-process-card h3{
+  color: var(--zl-home-text);
+}
+
+.zl-home-process-card p{
+  color: var(--zl-home-muted);
+}
+
+.zl-home-process-cta{
+  background:
+    linear-gradient(135deg, rgba(122, 20, 48, .06), rgba(202, 164, 93, .10)),
+    #ffffff;
+  border: 1px solid var(--zl-home-border);
+  border-radius: var(--zl-home-radius);
+  box-shadow: var(--zl-home-shadow);
+}
+
+.zl-home-process-cta strong{
+  color: var(--zl-home-text);
+}
+
+.zl-home-process-cta span{
+  color: var(--zl-home-muted);
+}
+
+.zl-home-process-button{
+  background: #e9a8bd;
+  border-color: #e9a8bd;
+  color: #ffffff;
+}
+
+.zl-home-process-button:hover{
+  background: #d88da8;
+  border-color: #d88da8;
+  color: #ffffff;
+}
+/* === END HOME PROCESS CONTRAST FIX === */
+

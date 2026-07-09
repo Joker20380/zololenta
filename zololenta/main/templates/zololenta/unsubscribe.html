@@ -1,0 +1,100 @@
+{% extends 'zololenta/base.html' %}
+{% load static %}
+
+{% block title %}Отписка от рассылки — Золотая лента{% endblock %}
+{% block description %}Страница отписки от email-рассылки сайта Золотая лента.{% endblock %}
+
+{% block extra_css %}
+  {{ block.super }}
+  <link rel="stylesheet" href="{% static 'zololenta/css/unsubscribe.css' %}">
+{% endblock %}
+
+{% block extra_js %}
+  {{ block.super }}
+  <script src="{% static 'zololenta/js/unsubscribe.js' %}" defer></script>
+{% endblock %}
+
+{% block content %}
+<section class="zl-unsubscribe-page">
+  <div class="container">
+    <div class="zl-unsubscribe-shell">
+
+      <article class="zl-unsubscribe-card">
+
+        <header class="zl-unsubscribe-card__header">
+          <span class="zl-unsubscribe-overline">Рассылка</span>
+
+          <h1>Отписка от писем</h1>
+
+          <p class="zl-unsubscribe-card__lead">
+            Укажите email, который был подписан на рассылку.
+            Мы отправим ссылку для подтверждения отписки.
+          </p>
+        </header>
+
+        <div class="zl-unsubscribe-card__body">
+
+          {% if messages %}
+            {% for message in messages %}
+              <div class="zl-unsubscribe-message">
+                {{ message }}
+              </div>
+            {% endfor %}
+          {% endif %}
+
+          <form method="post" class="zl-unsubscribe-form" data-zl-unsubscribe-form>
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+              <div class="zl-unsubscribe-message">
+                {{ form.non_field_errors }}
+              </div>
+            {% endif %}
+
+            {% for field in form %}
+              <div class="zl-unsubscribe-field">
+                <label for="{{ field.id_for_label }}">
+                  {{ field.label }}
+                </label>
+
+                {{ field }}
+
+                {% if field.help_text %}
+                  <div class="zl-unsubscribe-help">
+                    {{ field.help_text }}
+                  </div>
+                {% endif %}
+
+                {% if field.errors %}
+                  <ul class="zl-unsubscribe-errors">
+                    {% for error in field.errors %}
+                      <li>{{ error }}</li>
+                    {% endfor %}
+                  </ul>
+                {% endif %}
+              </div>
+            {% endfor %}
+
+            <div class="zl-unsubscribe-actions">
+              <button type="submit" class="zl-unsubscribe-button">
+                Получить ссылку отписки
+              </button>
+
+              <a href="{% url 'index' %}" class="zl-unsubscribe-link">
+                Вернуться на главную
+              </a>
+            </div>
+          </form>
+
+          <p class="zl-unsubscribe-note">
+            Мы не удаляем историю заказов и служебные сообщения.
+            Эта форма отключает только маркетинговую email-рассылку.
+          </p>
+
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+{% endblock %}

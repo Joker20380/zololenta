@@ -300,7 +300,7 @@ def Unsubscribe(request):
     else:
         form = UnsubscriberForm()
 
-    return render(request, "zololenta/unsubscribe_form.html", {"form": form})
+    return render(request, "zololenta/unsubscribe.html", {"form": form})
 
 
 def Unsubscribe_confirm(request, token):
@@ -309,7 +309,7 @@ def Unsubscribe_confirm(request, token):
     subscriber.unsubscribe_token = None
     subscriber.save()
     messages.success(request, "Вы успешно отписались от рассылки.")
-    return render(request, "zololenta/unsubscribe_success.html")
+    return render(request, "zololenta/unsubscribe_confirm.html")
 
 
 class ContactsView(TemplateView):
