@@ -425,88 +425,41 @@
   }
 </style>
 
-<div class="product-slider owl-carousel zl-home-choice-slider">
+<div class="product-slider owl-carousel zl-home-choice-slider zl-home-ribbon-color-carousel">
 
-      {% for n in view.news_colors %}
-        <div class="item">
+      {% for color in home_ribbon_colors %}
+                                <div class="item">
+                                    <div class="product zl-home-product-card zl-home-product-card--color">
+                                        <div class="img-prod">
+                                            {% if color.image %}
+                                                <img class="img-fluid"
+                                                     src="{{ color.image.url }}"
+                                                     alt="{{ color.title }}"
+                                                     loading="lazy"
+                                                     decoding="async">
+                                            {% else %}
+                                                <div class="zl-home-product-card__fallback"
+                                                     style="background: {{ color.hex_value }};"></div>
+                                            {% endif %}
+                                        </div>
 
-          <article class="product zl-home-choice-card">
-
-            <a href="{{ n.get_absolute_url }}"
-               class="img-prod zl-home-choice-image">
-
-              {% if n.photo %}
-                <img
-                  class="img-fluid owl-lazy lazyOwl"
-                  src="{% static 'images/placeholder.webp' %}"
-                  data-src="{{ n.photo.url }}"
-                  alt="Цвет выпускной ленты: {{ n.title }}"
-                  loading="lazy"
-                  decoding="async"
-                >
-              {% else %}
-                <div
-                  class="zl-home-choice-color-preview"
-                  style="background:
-                    linear-gradient(135deg, rgba(255,255,255,.48), rgba(255,255,255,0) 42%),
-                    linear-gradient(315deg, rgba(0,0,0,.14), rgba(0,0,0,0) 48%),
-                    {{ n.ribbon_option.css_value|default:'#F6E4EA' }};"
-                  role="img"
-                  aria-label="Цвет выпускной ленты: {{ n.title }}"
-                >
-                  <span class="zl-home-choice-color-preview__label">
-                    {{ n.title }}
-                  </span>
-                </div>
-              {% endif %}
-
-            </a>
-
-            <div class="text zl-home-choice-content">
-
-              <span class="zl-home-choice-type">
-                Цвет ленты
-              </span>
-
-              <h3>
-                <a href="{{ n.get_absolute_url }}">
-                  {{ n.title }}
-                </a>
-              </h3>
-
-              <a href="{{ n.get_absolute_url }}"
-                 class="zl-home-choice-link">
-                Посмотреть
-                <span aria-hidden="true">→</span>
-              </a>
-
-            </div>
-
-          </article>
-
-        </div>
-
-      {% empty %}
-
-        <div class="item">
-          <article class="product zl-home-choice-card">
-
-            <div class="img-prod zl-home-choice-image">
-              <img
-                class="img-fluid"
-                src="{% static 'images/placeholder.webp' %}"
-                alt="Варианты цвета ленты"
-              >
-            </div>
-
-            <div class="text zl-home-choice-content">
-              <h3>Палитра скоро появится</h3>
-            </div>
-
-          </article>
-        </div>
-
-      {% endfor %}
+                                        <div class="text py-3 px-3">
+                                            <h3>{{ color.title }}</h3>
+                                            <div class="d-flex align-items-center mt-2">
+                                                <span class="zl-home-product-card__swatch"
+                                                      style="background: {{ color.hex_value }};"></span>
+                                                <span class="ml-2 text-muted small">{{ color.hex_value }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% empty %}
+                                <div class="item">
+                                    <div class="text-center text-muted p-4">
+                                        Цвета скоро появятся.
+                                    </div>
+                                </div>
+                            {% endfor %}
 
     </div>
 
@@ -1015,5 +968,192 @@
 </section>
 
 <!-- HOME TAIL END -->
+
+
+
+<!-- RIBBON TEMPLATES -->
+<section class="ftco-section zl-home-templates-section">
+  <div class="container">
+
+    <div class="row justify-content-center mb-4">
+      <div class="col-md-10 text-center heading-section">
+        <span class="subheading">Каталог шаблонов</span>
+        <h2 class="mb-3">Примеры оформления лент</h2>
+        <p>
+          Шаблоны показывают варианты оформления и помогают выбрать визуальное направление.
+          Сам макет в конструкторе можно настроить отдельно: цвет, печать и шрифт.
+        </p>
+      </div>
+    </div>
+
+    {% if home_ribbon_templates %}
+      <div class="product-slider owl-carousel zl-home-template-carousel">
+        {% for template in home_ribbon_templates %}
+          <div class="item">
+            <div class="product zl-home-product-card zl-home-product-card--template">
+              <div class="img-prod">
+                {% if template.preview_image %}
+                  <img class="img-fluid"
+                       src="{{ template.preview_image.url }}"
+                       alt="{{ template.title }}"
+                       loading="lazy"
+                       decoding="async">
+                {% endif %}
+              </div>
+
+              <div class="text py-3 px-3">
+                <h3>{{ template.title }}</h3>
+                <p class="mb-0 text-muted small">Фото-пример оформления</p>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="text-center text-muted">
+        Шаблоны скоро появятся.
+      </div>
+    {% endif %}
+
+  </div>
+</section>
+
+
+<!-- CUSTOMER REVIEWS -->
+<section class="ftco-section zl-home-reviews-section">
+  <div class="container">
+
+    <div class="row justify-content-center mb-4">
+      <div class="col-md-10 text-center heading-section">
+        <span class="subheading">Отзывы</span>
+        <h2 class="mb-3">Что говорят клиенты</h2>
+        <p>
+          После выполнения заказа клиент может оставить отзыв по персональной ссылке.
+        </p>
+      </div>
+    </div>
+
+    {% if home_ribbon_reviews %}
+      <div class="product-slider owl-carousel zl-home-review-carousel">
+        {% for review in home_ribbon_reviews %}
+          <div class="item">
+            <div class="product zl-home-product-card zl-home-product-card--review">
+              {% if review.photo %}
+                <div class="img-prod">
+                  <img class="img-fluid"
+                       src="{{ review.photo.url }}"
+                       alt="Фото к отзыву"
+                       loading="lazy"
+                       decoding="async">
+                </div>
+              {% endif %}
+
+              <div class="text py-3 px-3">
+                <h3>
+                  {% if review.order and review.order.name %}
+                    {{ review.order.name }}
+                  {% else %}
+                    Клиент
+                  {% endif %}
+                </h3>
+                <p class="mb-2 text-muted small">Оценка {{ review.rating }}/5</p>
+                <p class="mb-0">{{ review.body|truncatechars:220 }}</p>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="text-center text-muted">
+        Отзывы скоро появятся.
+      </div>
+    {% endif %}
+
+  </div>
+</section>
+
+
+<style></style>
+
+<script>
+(function(){
+  function initHomeCarousel(selector, options){
+    if(!window.jQuery || !jQuery.fn || !jQuery.fn.owlCarousel){
+      return;
+    }
+
+    const $items = jQuery(selector);
+    if(!$items.length){
+      return;
+    }
+
+    $items.owlCarousel(Object.assign({
+      loop:false,
+      margin:24,
+      nav:true,
+      dots:false,
+      autoplay:false,
+      responsive:{
+        0:{ items:1 },
+        576:{ items:2 },
+        992:{ items:3 }
+      }
+    }, options || {}));
+  }
+
+  // Новые блоки главной работают как CSS-scroll strip.
+  // Owl здесь не используем, чтобы карточки не скрывались при сбое JS.
+})();
+</script>
+
+
+
+
+
+<style id="zl-home-existing-carousel-fix">
+.zl-home-product-card{
+  height:100%;
+}
+
+.zl-home-product-card .img-prod{
+  height:220px;
+  background:#f6f4f0;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.zl-home-product-card--color .img-prod{
+  height:170px;
+}
+
+.zl-home-product-card .img-prod img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+
+.zl-home-product-card__fallback{
+  width:100%;
+  height:100%;
+}
+
+.zl-home-product-card__swatch{
+  width:22px;
+  height:22px;
+  border-radius:8px;
+  display:inline-block;
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,.16);
+  flex:0 0 22px;
+}
+
+.zl-home-product-card .text h3{
+  font-size:16px;
+  line-height:1.25;
+  margin-bottom:4px;
+}
+</style>
 
 {% endblock %}

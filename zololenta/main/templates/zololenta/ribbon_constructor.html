@@ -245,19 +245,63 @@
                   <small class="text-muted">макет печати</small>
                 </div>
 
-                <div class="opt-grid opt-grid--templates mt-2" id="ribbonTemplateGrid">
-                  {% for template in ribbon_templates %}
-                    <button type="button"
-                            class="opt-mini js-template"
-                            data-id="{{ template.id }}"
-                            data-label="{{ template.title }}"
-                            aria-label="Шаблон: {{ template.title }}">
-                      <span class="mini-title">{{ template.title }}</span>
-                      <span class="mini-check" aria-hidden="true">✓</span>
-                    </button>
-                  {% empty %}
-                    <div class="text-muted p-3">Нет активных шаблонов.</div>
-                  {% endfor %}
+                <div class="ribbon-strip-wrap position-relative mt-2">
+                  <button type="button"
+                          class="ribbon-nav ribbon-nav--prev"
+                          data-scroll-target="#ribbonTemplateStrip"
+                          aria-label="Назад">‹</button>
+
+                  <div class="ribbon-strip"
+                       id="ribbonTemplateStrip"
+                       tabindex="0"
+                       aria-label="Каталог шаблонов ленты">
+                    {% for template in ribbon_templates %}
+                      <div class="ribbon-strip__item">
+                        <button type="button"
+                                class="opt-card2 opt-card2--template js-template"
+                                data-id="{{ template.id }}"
+                                data-label="{{ template.title }}"
+                                aria-label="Шаблон: {{ template.title }}">
+                          <div class="opt2-media">
+                            {% if template.preview_image %}
+                              <img class="opt2-img"
+                                   src="{{ template.preview_image.url }}"
+                                   alt="{{ template.title }}"
+                                   loading="lazy"
+                                   decoding="async">
+                            {% else %}
+                              <div class="opt2-img opt2-img--placeholder"
+                                   aria-hidden="true"></div>
+                            {% endif %}
+
+                            <span class="opt2-check" aria-hidden="true">✓</span>
+                          </div>
+
+                          <div class="opt2-body">
+                            <div class="opt2-title">{{ template.title }}</div>
+                            {% if template.description %}
+                              <div class="opt2-sub text-muted">
+                                {{ template.description|truncatechars:90 }}
+                              </div>
+                            {% else %}
+                              <div class="opt2-sub text-muted">
+                                Пример оформления
+                              </div>
+                            {% endif %}
+                          </div>
+                        </button>
+                      </div>
+                    {% empty %}
+                      <div class="ribbon-strip__item">
+                        <div class="text-muted p-3">Нет активных шаблонов с фото.</div>
+                      </div>
+                    {% endfor %}
+                  </div>
+
+                  <button type="button"
+                          class="ribbon-nav ribbon-nav--next"
+                          data-scroll-target="#ribbonTemplateStrip"
+                          aria-label="Вперёд">›</button>
                 </div>
 
                 {% if form.ribbon_template.errors %}<div class="text-danger mt-1">{{ form.ribbon_template.errors }}</div>{% endif %}
@@ -530,6 +574,7 @@
 }
 .opt-card2:hover{ transform:translateY(-1px); box-shadow:0 12px 26px rgba(0,0,0,.10); }
 .opt-card2.is-active{ border-color:#111827; box-shadow:0 14px 30px rgba(0,0,0,.16); }
+.opt-card2--template .opt2-media{ height:130px; }
 
 .opt2-media{ position:relative; height:92px; background:#f3f4f6; }
 .opt2-img{ width:100%; height:100%; object-fit:cover; display:block; }

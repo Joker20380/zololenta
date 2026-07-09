@@ -36,6 +36,44 @@ class Index(DataMixin, ListView):
     context_object_name = "news"
     paginate_by = 6
 
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context["home_ribbon_colors"] = (
+            RibbonColor.objects
+            .filter(is_active=True)
+            .order_by("sort_order", "title")[:80]
+        )
+
+        context["home_ribbon_templates"] = (
+            RibbonTemplate.objects
+            .filter(is_active=True)
+            .exclude(preview_image="")
+            .exclude(preview_image__isnull=True)
+            .order_by("sort_order", "title")[:18]
+        )
+
+        review_qs = (
+            RibbonOrderReview.objects
+            .select_related("order")
+            .order_by("-created_at")
+        )
+
+        review_field_names = {
+            field.name for field in RibbonOrderReview._meta.fields
+        }
+
+        if "is_published" in review_field_names:
+            review_qs = review_qs.filter(is_published=True)
+        elif "is_public" in review_field_names:
+            review_qs = review_qs.filter(is_public=True)
+        elif "is_approved" in review_field_names:
+            review_qs = review_qs.filter(is_approved=True)
+
+        context["home_ribbon_reviews"] = review_qs[:8]
+
+        return context
+
     @staticmethod
     def news_examples():
         return News.objects.filter(cat_id=2).order_by("-time_update")
