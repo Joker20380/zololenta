@@ -285,6 +285,146 @@ def generate_edit_token():
     return uuid.uuid4().hex
 
 
+
+class RibbonColor(models.Model):
+    """
+    Доменный каталог цветов ленты.
+
+    Это новая чистая сущность конструктора.
+    Не привязана к News и не зависит от legacy RibbonOption.
+    """
+
+    title = models.CharField("Название", max_length=120)
+    slug = models.SlugField("Slug", max_length=140, unique=True)
+    hex_value = models.CharField(
+        "HEX цвет",
+        max_length=7,
+        help_text="Например: #7A1430",
+    )
+    image = models.ImageField(
+        "Фото/превью ленты",
+        upload_to="ribbon/colors/%Y/%m/%d/",
+        blank=True,
+        null=True,
+    )
+    sort_order = models.PositiveIntegerField("Порядок", default=100)
+    is_active = models.BooleanField("Активен", default=True)
+    created_at = models.DateTimeField("Создан", auto_now_add=True)
+    updated_at = models.DateTimeField("Обновлён", auto_now=True)
+
+    class Meta:
+        verbose_name = "Цвет ленты"
+        verbose_name_plural = "Цвета лент"
+        ordering = ("sort_order", "title")
+
+    def __str__(self):
+        return self.title
+
+
+class RibbonTextColor(models.Model):
+    """
+    Каталог цветов текста/печати/фольги.
+    """
+
+    title = models.CharField("Название", max_length=120)
+    slug = models.SlugField("Slug", max_length=140, unique=True)
+    hex_value = models.CharField(
+        "HEX цвет",
+        max_length=7,
+        help_text="Например: #FFFFFF",
+    )
+    sort_order = models.PositiveIntegerField("Порядок", default=100)
+    is_active = models.BooleanField("Активен", default=True)
+    created_at = models.DateTimeField("Создан", auto_now_add=True)
+    updated_at = models.DateTimeField("Обновлён", auto_now=True)
+
+    class Meta:
+        verbose_name = "Цвет текста на ленте"
+        verbose_name_plural = "Цвета текста на ленте"
+        ordering = ("sort_order", "title")
+
+    def __str__(self):
+        return self.title
+
+
+class RibbonFont(models.Model):
+    """
+    Каталог шрифтов конструктора.
+
+    font_family хранит CSS font-family, который используется в preview и заказе.
+    font_file нужен для локальных шрифтов, preview_image — для карточки выбора.
+    """
+
+    title = models.CharField("Название", max_length=120)
+    slug = models.SlugField("Slug", max_length=140, unique=True)
+    font_family = models.CharField(
+        "CSS font-family",
+        max_length=160,
+        help_text="Например: 'Romantique Script', cursive",
+    )
+    font_file = models.FileField(
+        "Файл шрифта",
+        upload_to="ribbon/fonts/",
+        blank=True,
+        null=True,
+    )
+    preview_image = models.ImageField(
+        "Превью шрифта",
+        upload_to="ribbon/fonts/previews/%Y/%m/%d/",
+        blank=True,
+        null=True,
+    )
+    sort_order = models.PositiveIntegerField("Порядок", default=100)
+    is_active = models.BooleanField("Активен", default=True)
+    created_at = models.DateTimeField("Создан", auto_now_add=True)
+    updated_at = models.DateTimeField("Обновлён", auto_now=True)
+
+    class Meta:
+        verbose_name = "Шрифт ленты"
+        verbose_name_plural = "Шрифты лент"
+        ordering = ("sort_order", "title")
+
+    def __str__(self):
+        return self.title
+
+
+class RibbonTemplate(models.Model):
+    """
+    Шаблон/макет ленты.
+
+    На первом этапе это каталог выбора.
+    Позже сюда можно добавить JSON-настройки размещения текста, иконок, линий, венков и т.д.
+    """
+
+    title = models.CharField("Название", max_length=120)
+    slug = models.SlugField("Slug", max_length=140, unique=True)
+    description = models.TextField("Описание", blank=True)
+    preview_image = models.ImageField(
+        "Превью шаблона",
+        upload_to="ribbon/templates/%Y/%m/%d/",
+        blank=True,
+        null=True,
+    )
+    layout_config = models.JSONField(
+        "Настройки шаблона",
+        default=dict,
+        blank=True,
+        help_text="JSON-конфиг макета. Можно оставить пустым.",
+    )
+    sort_order = models.PositiveIntegerField("Порядок", default=100)
+    is_active = models.BooleanField("Активен", default=True)
+    created_at = models.DateTimeField("Создан", auto_now_add=True)
+    updated_at = models.DateTimeField("Обновлён", auto_now=True)
+
+    class Meta:
+        verbose_name = "Шаблон ленты"
+        verbose_name_plural = "Шаблоны лент"
+        ordering = ("sort_order", "title")
+
+    def __str__(self):
+        return self.title
+
+
 class RibbonOrder(models.Model):
     # --- идентификаторы / доступ ---
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -337,6 +477,39 @@ class RibbonOrder(models.Model):
 
     # LEGACY: старые справочники (News) — оставляем, но делаем optional
     # (чтобы не ломать старые заказы/админку и можно было мигрировать постепенно)
+    ribbon_color = models.ForeignKey(
+        RibbonColor,
+        verbose_name="Цвет ленты",
+        related_name="orders",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+    )
+    ribbon_text_color = models.ForeignKey(
+        RibbonTextColor,
+        verbose_name="Цвет текста",
+        related_name="orders",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+    )
+    ribbon_font = models.ForeignKey(
+        RibbonFont,
+        verbose_name="Шрифт",
+        related_name="orders",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+    )
+    ribbon_template = models.ForeignKey(
+        RibbonTemplate,
+        verbose_name="Шаблон ленты",
+        related_name="orders",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+    )
+
     color_news = models.ForeignKey(
         "News",
         on_delete=models.SET_NULL,

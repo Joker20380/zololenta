@@ -290,3 +290,39 @@ class RibbonOrderAdmin(admin.ModelAdmin):
 # Настройки интерфейса админки
 admin.site.site_title = "Администрирование сайта"
 admin.site.site_header = "Администрирование сайта"
+
+# --- Ribbon constructor clean catalog entities ---
+
+from django.contrib import admin as _ribbon_catalog_admin
+from .models import RibbonColor, RibbonTextColor, RibbonFont, RibbonTemplate
+
+
+class RibbonCatalogBaseAdmin(_ribbon_catalog_admin.ModelAdmin):
+    list_display = ("title", "slug", "sort_order", "is_active", "updated_at")
+    list_filter = ("is_active",)
+    search_fields = ("title", "slug")
+    prepopulated_fields = {"slug": ("title",)}
+    ordering = ("sort_order", "title")
+
+
+@_ribbon_catalog_admin.register(RibbonColor)
+class RibbonColorAdmin(RibbonCatalogBaseAdmin):
+    list_display = ("title", "hex_value", "sort_order", "is_active", "updated_at")
+    search_fields = ("title", "slug", "hex_value")
+
+
+@_ribbon_catalog_admin.register(RibbonTextColor)
+class RibbonTextColorAdmin(RibbonCatalogBaseAdmin):
+    list_display = ("title", "hex_value", "sort_order", "is_active", "updated_at")
+    search_fields = ("title", "slug", "hex_value")
+
+
+@_ribbon_catalog_admin.register(RibbonFont)
+class RibbonFontAdmin(RibbonCatalogBaseAdmin):
+    list_display = ("title", "font_family", "sort_order", "is_active", "updated_at")
+    search_fields = ("title", "slug", "font_family")
+
+
+@_ribbon_catalog_admin.register(RibbonTemplate)
+class RibbonTemplateAdmin(RibbonCatalogBaseAdmin):
+    list_display = ("title", "sort_order", "is_active", "updated_at")
