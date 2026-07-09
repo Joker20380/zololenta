@@ -383,7 +383,49 @@
     </header>
 
 
-    <div class="product-slider owl-carousel zl-home-choice-slider">
+    
+<style>
+  .zl-home-choice-color-preview {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    width: 100%;
+    min-height: 260px;
+    border-radius: 22px;
+    overflow: hidden;
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 255, 255, 0.42),
+      inset 0 28px 60px rgba(255, 255, 255, 0.22),
+      inset 0 -34px 70px rgba(0, 0, 0, 0.12);
+  }
+
+  .zl-home-choice-color-preview::before {
+    content: "";
+    position: absolute;
+    inset: 18px;
+    border-radius: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.42);
+    pointer-events: none;
+  }
+
+  .zl-home-choice-color-preview__label {
+    position: relative;
+    z-index: 1;
+    margin: 0 18px 20px;
+    padding: 9px 16px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.82);
+    color: #7A1430;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.2;
+    text-align: center;
+    box-shadow: 0 10px 28px rgba(122, 20, 48, 0.14);
+  }
+</style>
+
+<div class="product-slider owl-carousel zl-home-choice-slider">
 
       {% for n in view.news_colors %}
         <div class="item">
@@ -403,14 +445,19 @@
                   decoding="async"
                 >
               {% else %}
-                <img
-                  class="img-fluid owl-lazy lazyOwl"
-                  src="{% static 'images/placeholder.webp' %}"
-                  data-src="{% static 'images/placeholder.webp' %}"
-                  alt="Цвет выпускной ленты: {{ n.title }}"
-                  loading="lazy"
-                  decoding="async"
+                <div
+                  class="zl-home-choice-color-preview"
+                  style="background:
+                    linear-gradient(135deg, rgba(255,255,255,.48), rgba(255,255,255,0) 42%),
+                    linear-gradient(315deg, rgba(0,0,0,.14), rgba(0,0,0,0) 48%),
+                    {{ n.ribbon_option.css_value|default:'#F6E4EA' }};"
+                  role="img"
+                  aria-label="Цвет выпускной ленты: {{ n.title }}"
                 >
+                  <span class="zl-home-choice-color-preview__label">
+                    {{ n.title }}
+                  </span>
+                </div>
               {% endif %}
 
             </a>
