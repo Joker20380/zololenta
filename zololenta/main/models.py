@@ -299,6 +299,15 @@ class RibbonOrder(models.Model):
         verbose_name="Токен редактирования",
     )
 
+    review_token = models.CharField(
+        max_length=64,
+        unique=True,
+        default=generate_edit_token,
+        db_index=True,
+        verbose_name="Токен для отзыва",
+        help_text="Приватная ссылка для клиента без регистрации.",
+    )
+
     # --- макет / параметры ---
     text = models.CharField(max_length=120, verbose_name="Текст на ленте")
 
@@ -443,6 +452,69 @@ class RibbonOrder(models.Model):
         if self.tg_lock_until and self.tg_lock_until > timezone.now():
             return False
         return True
+
+
+
+class RibbonOrderReview(models.Model):
+    RATING_CHOICES = [
+        (5, "5 — отлично"),
+        (4, "4 — хорошо"),
+        (3, "3 — нормально"),
+        (2, "2 — плохо"),
+        (1, "1 — очень плохо"),
+    ]
+
+    order = models.OneToOneField(
+        "RibbonOrder",
+        on_delete=models.CASCADE,
+        related_name="order_review",
+        verbose_name="Заказ ленты",
+    )
+    rating = models.PositiveSmallIntegerField(
+        choices=RATING_CHOICES,
+        default=5,
+        verbose_name="Оценка",
+    )
+    body = models.TextField(verbose_name="Отзыв")
+    photo = models.ImageField(
+        upload_to="reviews/%Y/%m/%d/",
+        blank=True,
+        null=True,
+        verbose_name="Фото",
+    )
+    active = models.BooleanField(
+        default=False,
+        db_index=True,
+        verbose_name="Опубликован",
+        help_text="Отзыв появляется на сайте только после публикации.",
+    )
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Создан")
+    updated_at = models.DateTimeField(auto_now=True, verbose_name="Обновлён")
+
+    class Meta:
+        verbose_name = "Отзыв по заказу ленты"
+        verbose_name_plural = "Отзывы по заказам лент"
+        ordering = ["-created_at"]
+        indexes = [
+            models.Index(fields=["active", "created_at"], name="idx_ribrev_active_created"),
+        ]
+
+    def __str__(self):
+        return "Отзыв по заказу {}".format(self.order_id)
+
+    @property
+    def client_name(self):
+        return (self.order.name or "").strip() or "Клиент"
+
+    @property
+    def client_email(self):
+        return (self.order.email or "").strip()
+
+    @property
+    def client_phone(self):
+        return (self.order.phone or "").strip()
+
+
 
 
 
@@ -593,27 +665,3 @@ class ContactRequest(models.Model):
         return f"{self.name} → {contact_name} ({self.created_at:%d.%m.%Y})"
 
 
-class Review(models.Model):
-    project = models.ForeignKey(
-        Prog,
-        on_delete=models.PROTECT,
-        related_name="review",
-        verbose_name="Название проекта",
-        blank=True,
-        null=True,
-    )
-    name = models.CharField(max_length=80, verbose_name="Имя")
-    photo = models.ImageField(upload_to="photos/%Y/%m/%d/", verbose_name="Фото", blank=True, null=True)
-    email = models.EmailField(verbose_name="Email", blank=True, null=True)
-    body = models.TextField(verbose_name="Отзыв")
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
-    active = models.BooleanField(default=False, verbose_name="Опубликовать")
-
-    class Meta:
-        ordering = ("created",)
-        verbose_name = "Отзыв"
-        verbose_name_plural = "Отзывы"
-
-    def __str__(self):
-        return "Отзыв от {} на {}".format(self.name, self.project)

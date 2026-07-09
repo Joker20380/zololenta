@@ -12,6 +12,7 @@ from django_admin_geomap import geomap_context
 from .forms import (
     ContactRequestForm,
     RibbonOrderForm,
+    RibbonOrderReviewForm,
     SubscriberForm,
     UnsubscriberForm,
 )
@@ -20,9 +21,10 @@ from .models import (
     ContactGroup,
     Documents,
     News,
+    RibbonOrder,
+    RibbonOrderReview,
     RibbonOption,
-    Subscriber,
-)
+    Subscriber,)
 from .utils import DataMixin
 
 
@@ -124,6 +126,61 @@ class RibbonConstructorView(TemplateView):
             messages.success(request, "Заявка принята. Мы свяжемся с вами для подтверждения макета.")
             return redirect("ribbon_constructor")
         return self.render_to_response(self.get_context_data(form=form))
+
+
+
+def ribbon_order_review(request, token):
+    order = get_object_or_404(RibbonOrder, review_token=token)
+
+    try:
+        existing_review = order.order_review
+    except RibbonOrderReview.DoesNotExist:
+        existing_review = None
+
+    if existing_review is not None:
+        return render(
+            request,
+            "zololenta/ribbon_order_review.html",
+            {
+                "order": order,
+                "form": None,
+                "already_submitted": True,
+                "review": existing_review,
+            },
+        )
+
+    if request.method == "POST":
+        form = RibbonOrderReviewForm(request.POST, request.FILES)
+
+        if form.is_valid():
+            review = form.save(commit=False)
+            review.order = order
+            review.active = False
+            review.save()
+
+            return render(
+                request,
+                "zololenta/ribbon_order_review.html",
+                {
+                    "order": order,
+                    "form": None,
+                    "submitted": True,
+                    "review": review,
+                },
+            )
+    else:
+        form = RibbonOrderReviewForm()
+
+    return render(
+        request,
+        "zololenta/ribbon_order_review.html",
+        {
+            "order": order,
+            "form": form,
+            "submitted": False,
+            "already_submitted": False,
+        },
+    )
 
 
 class Confidential_information(DataMixin, ListView):

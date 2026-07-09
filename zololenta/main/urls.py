@@ -6,6 +6,7 @@ from .views import (
     ContactsView,
     Blog,
     RibbonConstructorView,
+    ribbon_order_review,
     Subscribe,
     Unsubscribe,
     Unsubscribe_confirm,
@@ -18,6 +19,7 @@ urlpatterns = [
     path("contacts/", ContactsView.as_view(), name="contacts"),
     path("blog/", Blog.as_view(), name="blog"),
     path("constructor/", RibbonConstructorView.as_view(), name="ribbon_constructor"),
+    path("review/order/<str:token>/", ribbon_order_review, name="ribbon_order_review"),
 
     path("subscribe/", Subscribe, name="subscribe"),
     path("unsubscribe/", Unsubscribe, name="unsubscribe_request"),

@@ -12,10 +12,10 @@ from users.models import UserProfile
 from .models import (
     Subscriber,
     RibbonOrder,
+    RibbonOrderReview,
     RibbonOption,
     Contact,
-    ContactRequest,
-)
+    ContactRequest,)
 
 
 # ============================================================
@@ -244,6 +244,42 @@ class UnsubscriberForm(forms.Form):
 # ============================================================
 # Конструктор лент
 # ============================================================
+
+class RibbonOrderReviewForm(forms.ModelForm):
+    """
+    Отзыв по заказу ленты.
+
+    Клиент не вводит имя, телефон или email повторно.
+    Эти данные берутся из RibbonOrder по приватному review_token.
+    """
+
+    class Meta:
+        model = RibbonOrderReview
+        fields = ["rating", "body", "photo"]
+        widgets = {
+            "rating": forms.RadioSelect(attrs={
+                "class": "zl-review-rating-input",
+            }),
+            "body": forms.Textarea(attrs={
+                "class": "form-control",
+                "rows": 6,
+                "placeholder": "Напишите, как прошёл заказ и понравился ли результат",
+            }),
+            "photo": forms.ClearableFileInput(attrs={
+                "class": "form-control",
+            }),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["photo"].required = False
+
+    def clean_body(self):
+        value = (self.cleaned_data.get("body") or "").strip()
+        if len(value) < 10:
+            raise forms.ValidationError("Отзыв слишком короткий.")
+        return value
+
 
 class RibbonOrderForm(forms.ModelForm):
     """

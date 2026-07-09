@@ -9,7 +9,7 @@ from .models import (
     CategoryLecture, Lecture,
     CategoryProg, Prog,
     Documents, Service, Subscriber,
-    ContactGroup, Contact, ContactRequest, Review,
+    ContactGroup, Contact, ContactRequest, RibbonOrderReview,
     RibbonOption, RibbonOrder,
 )
 
@@ -167,21 +167,33 @@ class ContactRequestAdmin(admin.ModelAdmin):
     is_new.short_description = "Новый?"
 
 
-@admin.register(Review)
-class ReviewAdmin(admin.ModelAdmin):
-    list_display = ("name", "get_photo", "email", "project")
+@admin.register(RibbonOrderReview)
+class RibbonOrderReviewAdmin(admin.ModelAdmin):
+    list_display = ("id", "order", "client_name", "rating", "active", "created_at")
+    list_filter = ("active", "rating", "created_at")
+    search_fields = (
+        "body",
+        "order__id",
+        "order__name",
+        "order__phone",
+        "order__email",
+    )
+    readonly_fields = ("created_at", "updated_at", "client_name", "client_phone", "client_email")
+    list_editable = ("active",)
+    ordering = ("-created_at",)
 
-    def get_photo(self, obj):
-        if obj.photo:
-            return mark_safe(f"<img src='{obj.photo.url}' width=50>")
-        return None
+    @admin.display(description="Имя клиента")
+    def client_name(self, obj):
+        return obj.client_name
 
-    get_photo.short_description = "Фото"
+    @admin.display(description="Телефон")
+    def client_phone(self, obj):
+        return obj.client_phone
 
+    @admin.display(description="Email")
+    def client_email(self, obj):
+        return obj.client_email
 
-# ============================================================
-# КОНСТРУКТОР ЛЕНТ: админка (TG синк — только через signals)
-# ============================================================
 
 @admin.register(RibbonOption)
 class RibbonOptionAdmin(ImportExportModelAdmin):

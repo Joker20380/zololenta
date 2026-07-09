@@ -1,0 +1,127 @@
+{% extends 'zololenta/base.html' %}
+
+{% block content %}
+<section class="ftco-section">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+
+        <div class="card border-0 shadow-sm zl-review-card">
+          <div class="card-body p-4 p-md-5">
+
+            <div class="mb-4">
+              <span class="text-muted d-block mb-2">Золотая лента</span>
+              <h1 class="mb-3 zl-review-title">
+                Отзыв о заказе
+              </h1>
+              <p class="text-muted mb-0">
+                Спасибо, что выбрали нас. Ваш отзыв поможет нам стать лучше.
+              </p>
+            </div>
+
+            {% if submitted %}
+              <div class="alert alert-success mb-0" role="alert">
+                Спасибо! Отзыв отправлен и появится на сайте после проверки.
+              </div>
+
+            {% elif already_submitted %}
+              <div class="alert alert-info mb-0" role="alert">
+                Отзыв по этому заказу уже отправлен. Спасибо!
+              </div>
+
+            {% else %}
+              <div class="alert alert-light border mb-4" role="note">
+                <strong>Данные заявки</strong><br>
+                Имя: {{ order.name|default:"Клиент" }}<br>
+                {% if order.phone %}
+                  Телефон: {{ order.phone }}<br>
+                {% endif %}
+                {% if order.email %}
+                  Email: {{ order.email }} <span class="text-muted">(на сайте не публикуется)</span><br>
+                {% endif %}
+                <span class="text-muted">
+                  Эти данные берутся из заявки. В отзыве нужно заполнить только оценку и текст.
+                </span>
+              </div>
+
+              <form method="post" enctype="multipart/form-data" novalidate>
+                {% csrf_token %}
+
+                <div class="form-group">
+                  <label>Оценка</label>
+                  <div class="zl-review-rating">
+                    {{ form.rating }}
+                  </div>
+                  {% if form.rating.errors %}
+                    <div class="text-danger mt-1">{{ form.rating.errors }}</div>
+                  {% endif %}
+                </div>
+
+                <div class="form-group">
+                  <label for="{{ form.body.id_for_label }}">Отзыв</label>
+                  {{ form.body }}
+                  {% if form.body.errors %}
+                    <div class="text-danger mt-1">{{ form.body.errors }}</div>
+                  {% endif %}
+                </div>
+
+                <div class="form-group">
+                  <label for="{{ form.photo.id_for_label }}">Фото, если хотите</label>
+                  {{ form.photo }}
+                  {% if form.photo.errors %}
+                    <div class="text-danger mt-1">{{ form.photo.errors }}</div>
+                  {% endif %}
+                </div>
+
+                {% if form.non_field_errors %}
+                  <div class="alert alert-danger">
+                    {{ form.non_field_errors }}
+                  </div>
+                {% endif %}
+
+                <button type="submit" class="btn btn-primary py-3 px-4">
+                  Отправить отзыв
+                </button>
+              </form>
+            {% endif %}
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .zl-review-card {
+    border-radius: 24px;
+    overflow: hidden;
+  }
+
+  .zl-review-title {
+    font-size: 32px;
+    line-height: 1.15;
+  }
+
+  .zl-review-rating ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 8px;
+  }
+
+  .zl-review-rating li {
+    padding: 10px 14px;
+    border: 1px solid rgba(122, 20, 48, 0.14);
+    border-radius: 14px;
+    background: #fff;
+  }
+
+  .zl-review-rating label {
+    margin: 0;
+    cursor: pointer;
+  }
+</style>
+{% endblock %}

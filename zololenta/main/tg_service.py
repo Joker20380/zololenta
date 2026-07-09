@@ -3,6 +3,7 @@ from datetime import timedelta
 
 from django.conf import settings
 from django.utils import timezone
+from django.urls import reverse
 
 
 # --- MarkdownV2 escaping ---
@@ -197,6 +198,25 @@ def _order_font_label(order) -> str:
     return "—"
 
 
+def _order_review_url(order) -> str:
+    token = (getattr(order, "review_token", "") or "").strip()
+    if not token:
+        return "—"
+
+    path = reverse("ribbon_order_review", args=[token])
+    base = (
+        getattr(settings, "SITE_URL", "")
+        or getattr(settings, "SITE_BASE_URL", "")
+        or getattr(settings, "PUBLIC_SITE_URL", "")
+        or ""
+    ).rstrip("/")
+
+    if base:
+        return f"{base}{path}"
+
+    return path
+
+
 # ===== formatter =====
 
 def format_order(order) -> str:
@@ -209,6 +229,7 @@ def format_order(order) -> str:
     ribbon_color = _order_ribbon_color_label(order)
     font_label = _order_font_label(order)
     text_color = _text_color_label(getattr(order, "text_color", ""))
+    review_url = _order_review_url(order)
 
     return (
         "🎓 *Заявка на ленты*\n\n"
@@ -225,6 +246,7 @@ def format_order(order) -> str:
         f"*Контакт:* {mdv2_escape(order.name or '—')}\n"
         f"*Телефон:* {mdv2_escape(order.phone or '—')}\n"
         f"*Email:* {mdv2_escape(order.email or '—')}\n"
+        f"*Ссылка на отзыв:* {mdv2_escape(review_url)}\n"
     )
 
 
